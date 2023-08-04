@@ -16,12 +16,29 @@ begin
     using KrylovKit
 end
 
-# ╔═╡ e7691f98-44f4-476f-a3a2-4a9f0eb44a71
-html"<button onclick='present()'>present</button>"
+# ╔═╡ 0d49dbcd-b3d2-4965-b0b7-1de58f72025e
+ChooseDisplayMode()
 
+# ╔═╡ b47de57f-ee37-4a92-b99d-1a3763c31a3f
+TableOfContents()
 
-# ╔═╡ 371d536b-1e25-455a-86ca-c7eef675b959
-PlutoUI.TableOfContents(title="Table of Contents", indent=true)
+# ╔═╡ 0a2a79cc-9a37-4f96-b422-1a529d6a689b
+html"""
+	<h1 style="text-align:center">
+		Julia for Quantum Many-Body Computation
+	</h1>
+	<div style="text-align:center">
+		<p style="font-weight:bold; font-size: 35px; font-variant: small-caps; margin: 0px">
+			A Starter Kit
+		</p>
+		<p style="font-size: 30px; font-variant: small-caps; margin: 0px">
+			Yusheng Zhao
+		</p>
+		<p style="font-size: 20px;">
+			MinJiang University, Fu Zhou, 08/17 2023
+		</p>
+	</div>
+"""
 
 # ╔═╡ 57684dc8-31f9-11ee-2888-770b687183aa
 md"
@@ -37,6 +54,30 @@ md"
 - Rich eco system
 
 "
+
+# ╔═╡ 6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
+md"""# Installation
+## Installing Julia
+We will install Julia using [juliaup](https://github.com/JuliaLang/juliaup).
+The following commands have to be entered in your terminal.
+
+**Linux and macOS**
+```bash
+curl -fsSL https://install.julialang.org | sh
+```
+
+**Windows**
+
+Install Julia [from the Windows store](https://www.microsoft.com/store/apps/9NJNWW8PVKMN) or run
+```bash
+winget install julia -s msstore
+```
+#### Setting the default version
+For this class, we are going to use Julia 1.8. To set it as the default version on your machine, run
+```bash
+juliaup default 1.8
+```
+"""
 
 # ╔═╡ 4177977c-462a-49a6-afd7-5a83b7cb3c7e
 md"
@@ -693,10 +734,12 @@ version = "17.4.0+0"
 """
 
 # ╔═╡ Cell order:
-# ╟─e7691f98-44f4-476f-a3a2-4a9f0eb44a71
-# ╠═9f9230a7-6900-42b3-a3c6-df303c9d9f39
-# ╟─371d536b-1e25-455a-86ca-c7eef675b959
-# ╠═57684dc8-31f9-11ee-2888-770b687183aa
+# ╟─0d49dbcd-b3d2-4965-b0b7-1de58f72025e
+# ╟─b47de57f-ee37-4a92-b99d-1a3763c31a3f
+# ╟─9f9230a7-6900-42b3-a3c6-df303c9d9f39
+# ╟─0a2a79cc-9a37-4f96-b422-1a529d6a689b
+# ╟─57684dc8-31f9-11ee-2888-770b687183aa
+# ╠═6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 # ╠═4177977c-462a-49a6-afd7-5a83b7cb3c7e
 # ╠═7ced479f-0d0e-4b94-834c-b3885ef077a6
 # ╠═dd4ea4a2-9e06-43f7-976b-0c9af661cc8e
