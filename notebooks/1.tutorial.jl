@@ -35,20 +35,29 @@ html"""
 			Yusheng Zhao
 		</p>
 		<p style="font-size: 20px;">
-			MinJiang University, Fu Zhou, 08/17 2023
+			MinJiang University, Fu Zhou, 08/17/2023
 		</p>
 	</div>
 """
 
 # ╔═╡ 57684dc8-31f9-11ee-2888-770b687183aa
 md"
-# Why Julia
+# Why Julia?
 ## What is Julia?
-- It’s a general purpose, dynamically typed programming language with the goal of being fast, reproducible, composable and open source. 
+- Julia is a general purpose, dynamically typed programming language with the goal of being fast, reproducible, composable and open source.
 ### Fast
+- Fast to code out
+- Fast to execute
+
 ### Reproducible
+- Environment management is done through `Project.toml` file.
+
 ### Dynamically Typed
+- No need to declare the type of variables
+
 ### Composable
+- Expanding known API is really easy...
+
 ### Open source
 - You are the user and the maker
 - Rich eco system
@@ -56,42 +65,108 @@ md"
 "
 
 # ╔═╡ 6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
-md"""# Installation
-## Installing Julia
-We will install Julia using [juliaup](https://github.com/JuliaLang/juliaup).
-The following commands have to be entered in your terminal.
+md"
+# Installation and Setup
+## Juliaup
+- `Juliaup` is a tool to manage Julia versions and installations.
+- It allows you to install multiple versions of Julia and switch between them easily.
 
+### Installing Juliaup
+- Enter the following commands in your terminal will install Juliaup.
 **Linux and macOS**
 ```bash
 curl -fsSL https://install.julialang.org | sh
 ```
-
 **Windows**
-
-Install Julia [from the Windows store](https://www.microsoft.com/store/apps/9NJNWW8PVKMN) or run
 ```bash
 winget install julia -s msstore
 ```
-#### Setting the default version
-For this class, we are going to use Julia 1.8. To set it as the default version on your machine, run
-```bash
-juliaup default 1.8
-```
-"""
+"
+
+# ╔═╡ 60126082-d482-4549-affe-363bd8a24556
+Markdown.MD(
+    Markdown.Admonition(
+        "tip",
+        "Window Store:",
+        [
+            md"""
+            You can also install Juliaup directly from [Windows Store](https://www.microsoft.com/store/apps/9NJNWW8PVKMN).
+            """,
+        ],
+    ),
+)
 
 # ╔═╡ 4177977c-462a-49a6-afd7-5a83b7cb3c7e
+Markdown.MD(
+    Markdown.Admonition(
+        "hint",
+        "Alternative Juliaup Server",
+        [
+            md"""
+            If you are in China, you may need to specify another server for installing Juliaup.
+
+            **Linux and macOS**
+            ```bash
+            export JULIAUP_SERVER=https://mirrors.tuna.tsinghua.edu.cn/julia-releases
+            ```
+            **Windows**
+            ```PowerShell
+            $env:JULIAUP_SERVER="https://mirrors.tuna.tsinghua.edu.cn/julia-releases"
+            ```
+            """,
+        ],
+    ),
+)
+
+# ╔═╡ a5c07334-7ea0-4963-b3e7-088c39c44175
 md"
-# Installation and Setups
-## Juliaup
-- What is Jualiup?
-- How to use it?
-- Windows
-- L/U nix
-- Server issue (maybe talked too much, hide it in another tutorial for reading?)
-## Julia Pkg server
-- What is it?
-- Why need it?
-- https://discourse.juliacn.com/t/topic/2969
+## Installing Julia
+- Once you have installed Juliaup, you can install Julia by running the following command in your terminal.
+  ```bash
+  juliaup default 1.9
+  ```
+- To verify that Julia is installed, run the following command in your terminal.
+  ```bash
+  julia
+  ```
+- It should start a Julia REPL(Read-Eval-Print-Loop) session like this
+![REPL Session]()
+- If you wish to install a specific version of Julia, please refer to the [documentation](https://github.com/JuliaLang/juliaup).
+
+## Package Management
+- `Julia` has a mature eco-system for scientific computing.
+- 'Pkg' is the built-in package manager for Julia.
+- To enter the package manager, press `]` in the REPL.
+![Package Manager]()
+- The environment is indicated by the `(@v1.9)`.
+- To add a package, type `add <package name>`.
+
+### First Package: PkgServerClient.jl
+- Due to some special reasons, we need to install `PkgServerClient.jl` first.
+- You should first execute the following command
+
+  **Linux and macOS**
+  ```bash
+    export JULIA_PKG_SERVER='https://mirrors.nju.edu.cn/julia'
+  ```
+
+  **Windows**
+  ```PowerShell
+    $env:JULIA_PKG_SERVER='https://mirrors.nju.edu.cn/julia'
+  ```
+- Then you can add `PkgServerClient.jl` by typing `add PkgServerClient` in the package manager.
+- To make sure Julia uses the package automatically at startup, configure the `startup.jl` file.
+
+### More Packages
+- You may find more packages for scientific computing [here](https://juliahub.com/).
+![JuliaHub]()
+"
+
+# ╔═╡ aff93d69-e2ff-4d1e-b5c2-728c484d80fa
+md"
+## Editor
+- TL;DR: use VSCode
+![VSCode Julia Layout](https://code.visualstudio.com/assets/docs/languages/julia/overview.png)
 "
 
 # ╔═╡ 7ced479f-0d0e-4b94-834c-b3885ef077a6
@@ -135,11 +210,27 @@ md"
 # ╔═╡ 92861ca5-ce68-4874-8451-c81b54772826
 md"
 # Information
-- Where to find information: Slack, zulip, JuliaCN discourse
-- What kind of opportunity is there: OSPP, GSoC
-- What if you meeting problem: 
-Promote our server
+- Should you be interested in Julia, you can join the following communities to obtain more information
+  1) [Slack](https://julialang.org/slack/)
+  2) [Zulip](https://julialang.zulipchat.com/register/)
+  3) [HKUST(GZ) Zulip](https://zulip.hkust-gz.edu.cn/)
+  4) [Julia Discourse](https://discourse.julialang.org/)
+  5) [JuliaCN Discourse](https://discourse.juliacn.com/)
 
+- There are many opportunities for you to contribute to the Julia community
+  1) [OSPP](https://summer-ospp.ac.cn/)
+  2) [JSoC](https://julialang.org/jsoc/)
+  3) [GSoC](https://julialang.org/jsoc/#google_summer_of_code_gsoc)
+"
+
+# ╔═╡ b98c561d-01d9-4ca5-82a4-2d87f19bb494
+md"
+# References
+- [Why is Julia faster than Python?](https://juejin.cn/post/6844903782413778952)
+- [Why is Julia so fast](https://juejin.cn/post/6844903660669911054)
+- [TUM Course on Machine Learning using Julia](https://github.com/adrhill/julia-ml-course)
+- [Setting Up Julia PkgServer](https://discourse.juliacn.com/t/topic/2969)
+- []
 "
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -739,15 +830,19 @@ version = "17.4.0+0"
 # ╟─9f9230a7-6900-42b3-a3c6-df303c9d9f39
 # ╟─0a2a79cc-9a37-4f96-b422-1a529d6a689b
 # ╟─57684dc8-31f9-11ee-2888-770b687183aa
-# ╠═6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
-# ╠═4177977c-462a-49a6-afd7-5a83b7cb3c7e
+# ╟─6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
+# ╟─60126082-d482-4549-affe-363bd8a24556
+# ╟─4177977c-462a-49a6-afd7-5a83b7cb3c7e
+# ╠═a5c07334-7ea0-4963-b3e7-088c39c44175
+# ╟─aff93d69-e2ff-4d1e-b5c2-728c484d80fa
 # ╠═7ced479f-0d0e-4b94-834c-b3885ef077a6
 # ╠═dd4ea4a2-9e06-43f7-976b-0c9af661cc8e
-# ╠═7f8975e7-9558-46c3-8348-0a53148a5c23
+# ╟─7f8975e7-9558-46c3-8348-0a53148a5c23
 # ╠═28b9449a-95d2-4864-8cbd-9eb99d5611b0
 # ╠═981da071-b446-4b43-a1b1-9a809179e048
 # ╠═84ff2a7f-4484-4264-916c-4fe64601446e
 # ╠═a07a06f8-7ed3-4ec0-8a88-af07cccd4def
-# ╠═92861ca5-ce68-4874-8451-c81b54772826
+# ╟─92861ca5-ce68-4874-8451-c81b54772826
+# ╟─b98c561d-01d9-4ca5-82a4-2d87f19bb494
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
