@@ -44,23 +44,16 @@ html"""
 md"
 # Why Julia?
 ## What is Julia?
-- Julia is a general purpose, dynamically typed programming language with the goal of being fast, reproducible, composable and open source.
-### Fast
+- Julia is a **modern**, **dynamic** programming language with the goal of being **easy to be made fast**.
+
+### Dynamic
 - Fast to code out
-- Fast to execute
+- Flexibility
+- Give an example of code and compare it with the same code in c++ and python
+- But.... this necessarily means sacrificing performance.
 
-### Reproducible
-- Environment management is done through `Project.toml` file.
-
-### Dynamically Typed
-- No need to declare the type of variables
-
-### Composable
-- Expanding known API is really easy...
-
-### Open source
-- You are the user and the maker
-- Rich eco system
+### Type Inference and Multiple Dispatch
+- type interence and multiple dispatch allows Julia JIT to compile to optimized code.
 
 "
 
@@ -201,6 +194,8 @@ mat(ham)
 # ╔═╡ 84ff2a7f-4484-4264-916c-4fe64601446e
 eigsolve(mat(ham))
 # let's dive into it
+# we should use symmetry to simplify the process https://www.youtube.com/watch?v=CoY5XwmFkF4
+# use MPSKit and etc
 
 # ╔═╡ a07a06f8-7ed3-4ec0-8a88-af07cccd4def
 md"
@@ -225,12 +220,13 @@ md"
 
 # ╔═╡ b98c561d-01d9-4ca5-82a4-2d87f19bb494
 md"
-# References
+#
+References
 - [Why is Julia faster than Python?](https://juejin.cn/post/6844903782413778952)
 - [Why is Julia so fast](https://juejin.cn/post/6844903660669911054)
 - [TUM Course on Machine Learning using Julia](https://github.com/adrhill/julia-ml-course)
 - [Setting Up Julia PkgServer](https://discourse.juliacn.com/t/topic/2969)
-- []
+- [Is Julia Static or Dynamic](https://stackoverflow.com/questions/28078089/is-julia-dynamically-typed)
 "
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
