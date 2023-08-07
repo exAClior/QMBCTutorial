@@ -46,16 +46,44 @@ md"
 ## What is Julia?
 - Julia is a **modern**, **dynamic** programming language with the goal of being **easy to be made fast**.
 
+### Modern
+- Built-in envorinment and package management
+![PackageMangement](https://github.com/exAClior/QMBCTutorial/blob/ys/julia-tutorial/notebooks/resources/scripts/Packages.gif?raw=true)
+- built-in unit testing
+![Unittest](https://github.com/exAClior/QMBCTutorial/blob/ys/julia-tutorial/notebooks/resources/scripts/unittest.gif?raw=true)
+- open-source rooted
+
 ### Dynamic
 - Fast to code out
 - Flexibility
 - Give an example of code and compare it with the same code in c++ and python
 - But.... this necessarily means sacrificing performance.
+- High level feature: treats ln(0) nicely
+- Consequently, we could implement high-level idea of an algorithm and don't care about it's deatils.
+- two language problem
 
 ### Type Inference and Multiple Dispatch
 - type interence and multiple dispatch allows Julia JIT to compile to optimized code.
 
 "
+
+# ╔═╡ 0684f0b3-3030-4297-9d5b-026ff166ee1f
+
+
+# ╔═╡ 25af0aa3-8151-41f6-a351-a9444c3e74a6
+
+
+# ╔═╡ bec0efb6-1f14-4e22-b01c-bbf992f29b52
+
+
+# ╔═╡ b6f8509d-00dc-4a93-a2aa-605e4cfc7ee5
+
+
+# ╔═╡ 69b0c1f5-2386-4601-8dab-dacec2ecda78
+
+
+# ╔═╡ f1b9b634-5411-4af9-981d-e7d931201f5c
+
 
 # ╔═╡ 6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 md"
@@ -826,6 +854,12 @@ version = "17.4.0+0"
 # ╟─9f9230a7-6900-42b3-a3c6-df303c9d9f39
 # ╟─0a2a79cc-9a37-4f96-b422-1a529d6a689b
 # ╟─57684dc8-31f9-11ee-2888-770b687183aa
+# ╠═0684f0b3-3030-4297-9d5b-026ff166ee1f
+# ╠═25af0aa3-8151-41f6-a351-a9444c3e74a6
+# ╠═bec0efb6-1f14-4e22-b01c-bbf992f29b52
+# ╠═b6f8509d-00dc-4a93-a2aa-605e4cfc7ee5
+# ╠═69b0c1f5-2386-4601-8dab-dacec2ecda78
+# ╠═f1b9b634-5411-4af9-981d-e7d931201f5c
 # ╟─6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 # ╟─60126082-d482-4549-affe-363bd8a24556
 # ╟─4177977c-462a-49a6-afd7-5a83b7cb3c7e
