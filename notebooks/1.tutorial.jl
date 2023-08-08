@@ -51,20 +51,17 @@ html"""
 # ╔═╡ 57684dc8-31f9-11ee-2888-770b687183aa
 md"
 # Why Julia?
-## What is Julia?
-- Julia is a **modern**, **dynamic** programming language with the goal of being **easy to be made fast**.
+## Short Answer
+- Julia allows creation of *fast* scientific computation code with *ease*!
 
-### Modern
-- Built-in envorinment and package management
-![PackageMangement](https://github.com/exAClior/QMBCTutorial/blob/ys/julia-tutorial/notebooks/resources/scripts/Packages.gif?raw=true)
-- Built-in unit testing
-![Unittest](https://github.com/exAClior/QMBCTutorial/blob/ys/julia-tutorial/notebooks/resources/scripts/unittest.gif?raw=true)
-- Rooted in open-source community
+## What is Julia?
+- Julia is a **dynamic** programming language with the goal of being **easy to be made fast**.
 
 ### Dynamic
 - Shallow learning curve
 - Normally means low performance
 - Two language problem
+- When is vectorized code bad?
 "
 
 # ╔═╡ 0684f0b3-3030-4297-9d5b-026ff166ee1f
@@ -85,7 +82,12 @@ end
 # ╔═╡ bec0efb6-1f14-4e22-b01c-bbf992f29b52
 md"
 ### Type Inference and Multiple Dispatch
+- Computers are fast when it knows EXACTLY what to do
 - Slowness of Dynamic language is related to cache miss.
+- User defined type needs to conform to Julia type system
+- Just ahead of time compiler: aggressively optimizes code based on runtime type info
+- time to first plot
+- Code introspect `@code_llvm` easy to spot your performance lagging
 "
 
 
@@ -190,7 +192,7 @@ md"
 - `Julia` has a mature eco-system for scientific computing.
 - 'Pkg' is the built-in package manager for Julia.
 - To enter the package manager, press `]` in the REPL.
-![Package Manager]()
+![PackageMangement](https://github.com/exAClior/QMBCTutorial/blob/ys/julia-tutorial/notebooks/resources/scripts/Packages.gif?raw=true)
 - The environment is indicated by the `(@v1.9)`.
 - To add a package, type `add <package name>`.
 
@@ -213,6 +215,10 @@ md"
 ### More Packages
 - You may find more packages for scientific computing [here](https://juliahub.com/).
 ![JuliaHub]()
+
+### Unittesting
+- Built-in unit testing
+![Unittest](https://github.com/exAClior/QMBCTutorial/blob/ys/julia-tutorial/notebooks/resources/scripts/unittest.gif?raw=true)
 "
 
 # ╔═╡ aff93d69-e2ff-4d1e-b5c2-728c484d80fa
@@ -227,6 +233,7 @@ md"
 # Examples
 ## ED
 Let us demonstrate the Exact Diagonalization of a 1D Heisenberg XXX model.
+Imprtant method that is brain free , so could be used as unittest
 "
 
 # ╔═╡ 7f8975e7-9558-46c3-8348-0a53148a5c23
@@ -246,16 +253,19 @@ function make_hamiltonian(L::Int, J::Real, h::Real; periodic::Bool=false)
 end
 
 # ╔═╡ 28b9449a-95d2-4864-8cbd-9eb99d5611b0
-ham = make_hamiltonian(4, 1.0, 0.0; periodic=true)
+ham = make_hamiltonian(10, 1.0, 0.0; periodic=true)
 
 # ╔═╡ 981da071-b446-4b43-a1b1-9a809179e048
 mat(ham)
 
 # ╔═╡ 84ff2a7f-4484-4264-916c-4fe64601446e
+# ╠═╡ disabled = true
+#=╠═╡
 eigsolve(mat(ham))
 # let's dive into it
 # we should use symmetry to simplify the process https://www.youtube.com/watch?v=CoY5XwmFkF4
 # use MPSKit and etc
+  ╠═╡ =#
 
 # ╔═╡ a07a06f8-7ed3-4ec0-8a88-af07cccd4def
 md"
@@ -1609,10 +1619,10 @@ version = "1.4.1+0"
 # ╠═cd026a50-6e6c-4828-9880-548ea249451a
 # ╠═0684f0b3-3030-4297-9d5b-026ff166ee1f
 # ╠═e2633187-3b79-4c58-b2a3-8dc6d30b9b9c
-# ╠═bec0efb6-1f14-4e22-b01c-bbf992f29b52
+# ╟─bec0efb6-1f14-4e22-b01c-bbf992f29b52
 # ╟─cfaa7ee8-8de8-4933-8396-0350408a14b4
 # ╟─69738959-95a3-46b4-9124-5db1160c1295
-# ╠═5f48ed39-078a-4eec-839d-b750c0faf8d5
+# ╟─5f48ed39-078a-4eec-839d-b750c0faf8d5
 # ╠═83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
 # ╟─6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 # ╟─60126082-d482-4549-affe-363bd8a24556
