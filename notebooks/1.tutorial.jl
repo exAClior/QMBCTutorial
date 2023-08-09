@@ -302,14 +302,14 @@ md"
 ## ED
 - We are all expert in ED
 - Important algorithm for benchmarking
-- Demonstrate ED of a 1D Heisenberg XXZ model.
+- Demonstrate ED of a 1D Heisenberg XXZ model: $$H = \sum_{<i,j>} J \sigma_i^x \sigma_j^x + J \sigma_i^y \sigma_j^y + J_z \sigma_i^z\sigma_j^z$$
 - Construct Hamiltonian using `Yao.jl`
 "
 
 # ╔═╡ 356cd762-e438-47c7-97b8-3f08b02048f3
 md"
 ### Yao
-- Yao is an Extensible, Efficient Quantum Algorithm Design library For Humans written and maintained by Xiuezhe (Roger) Luo and Jin-Guo Liu
+- Yao is an Extensible, Efficient Quantum Algorithm Design library For Humans written and maintained by Xiuzhe (Roger) Luo and Jin-Guo Liu
 
 ![Roger Luo](./resources/imgs/roger.png)
 ![Jin-Guo Liu](./resources/imgs/jinguo.png)
@@ -318,23 +318,23 @@ md"
 "
 
 # ╔═╡ 7f8975e7-9558-46c3-8348-0a53148a5c23
-function make_XXZhamiltonian(L::Int, J::Real, h::Real; periodic::Bool=false)
+function make_XXZhamiltonian(L::Int, J::Real, Jz::Real; periodic::Bool=false)
     # construct the Hamiltonian
     # L: number of sites
-    # J: coupling strength
-    # h: magnetic field strength
+    # J: coupling strength between pauli X and Y
+    # Jz: coupling strength between pauli Z
     # return: Hamiltonian
-    hamiltonian = sum(put(L,i=>Z) for i in 1:L)
     offset = periodic ? 0 : 1
-    for pauli in [X,Y,Z]
-    	hamiltonian += sum(kron(L, i=>pauli , mod1(i+1, L)=>pauli) for i in 1:L-offset)
+    hamiltonian = sum(Jz * kron(L, i=>Z, mod1(i+1,L)=>Z) for i in 1:L-offset)
+    for pauli in [X,Y]
+    	hamiltonian += sum(J * kron(L, i=>pauli , mod1(i+1, L)=>pauli) for i in 1:L-offset)
     end
 
     return hamiltonian
 end
 
 # ╔═╡ 28b9449a-95d2-4864-8cbd-9eb99d5611b0
-ham = make_XXZhamiltonian(10, 1.0, 0.0; periodic=true)
+ham = make_XXZhamiltonian(22, 1.0, 0.0; periodic=true)
 
 
 # ╔═╡ 981da071-b446-4b43-a1b1-9a809179e048
@@ -347,6 +347,7 @@ md"
 - Pauli Matrices are constructed as sparse matrices
 `(:Y, PermMatrix([2, 1], ConstGateDefaultType[-im, im]))`
 [code](https://github.com/QuantumBFS/Yao.jl/blob/cfde9f072b56e830bc91fa27f51a121912eff130/lib/YaoBlocks/src/primitive/const_gate_gen.jl)
+- Kronecker products and summations are supported on sparse matrices
 "
 
 # ╔═╡ 2f554504-415d-4ad6-8b7c-e193221a3213
@@ -368,42 +369,43 @@ end
 
 # ╔═╡ f2e9efd9-76d3-461a-bf55-3a4916673dc1
 md"
-### Outside of Spin 1/2
-Of course, there are ways to construct Hamiltonian constructed from other basis like Gell-Mann matrices
+### Extending to Spin 1 systems
+- Julia makes extending existing libraries easy
+- E.g: extend `Yao.jl` to support creating 
 "
 
 # ╔═╡ 3906d7ad-a934-4fc0-9f63-266006fc25d8
 begin
-@const_gate Gell1 = PermMatrix([2,1,3],ComplexF64[1,1,0]) nlevel=3 
-@const_gate Gell2 = PermMatrix([2,1,3],ComplexF64[-im,im,0]) nlevel=3
-@const_gate Gell3 = Diagonal(ComplexF64[1,-1,0]) nlevel=3
+	@const_gate cdagger = PermMatrix([2,1],ComplexF64[1,0])
+	@const_gate c = PermMatrix([2,1],ComplexF64[0,1])
+	@const_gate n = Diagonal(ComplexF64[0,1])
 end
 
 # ╔═╡ f87f65e8-770c-46b7-a416-df1cfa16f917
-function make_spin1hamiltonian(L::Int, J::Real, h::Real; periodic::Bool=false)
+function make_fermhubbard(L::Int, t::Real, U::Real)
     # construct the Hamiltonian
     # L: number of sites
-    # J: coupling strength
-    # h: magnetic field strength
+    # t: hopping strength
+    # U: onsite interaction strength
     # return: Hamiltonian
-    hamiltonian = sum(put(L,i=>Gell3) for i in 1:L)
-    offset = periodic ? 0 : 1
-    for gell in [Gell1,Gell2,Gell3]
-    	hamiltonian += sum(kron(L, i=>gell , mod1(i+1, L)=>gell) for i in 1:L-offset)
-    end
+    hamiltonian = sum(U * kron(2*L,i=>n,mod1(i+1,2*L)=>n) for i in 1:2:2*L)
+    hamiltonian += sum(t * kron(2*L, i=>cdagger , mod1(i+2, L)=>c) for i in 1:2:2*L)
+    hamiltonian += sum(t * kron(2*L, mod1(i+2,L)=>cdagger , i=>c) for i in 1:2:2*L)
 
     return hamiltonian
 end
 
 # ╔═╡ 6d3c3d49-b7fb-4057-a6c6-6ac9a7090340
-ham_spin1 = make_spin1hamiltonian(10,1,1;periodic=true)
+fermhubham = make_fermhubbard(8,1,2)
 
 # ╔═╡ 488642c1-ffc3-4e7c-98d0-84bac47967ea
-mat(ham_spin1)
+mat(fermhubham)
 
 # ╔═╡ 026887ca-4ed2-4192-a730-8f0fcd934d07
 md"
 ### Eigenvalue solving
+- We will use `KrylovKit.jl`
+- 
 "
 
 # ╔═╡ 84ff2a7f-4484-4264-916c-4fe64601446e
@@ -414,6 +416,11 @@ eigsolve(mat(ham))
 # we should use symmetry to simplify the process https://www.youtube.com/watch?v=CoY5XwmFkF4
 # use MPSKit and etc
   ╠═╡ =#
+
+# ╔═╡ e265dd8e-e01f-4c23-a90d-180d87058207
+md"
+We then use the `MPSKit.jl` with `TensorKit.jl` to utilize the symmetry in the Hamiltonian
+"
 
 # ╔═╡ a07a06f8-7ed3-4ec0-8a88-af07cccd4def
 md"
@@ -484,7 +491,7 @@ References
 # ╠═7f8975e7-9558-46c3-8348-0a53148a5c23
 # ╠═28b9449a-95d2-4864-8cbd-9eb99d5611b0
 # ╠═981da071-b446-4b43-a1b1-9a809179e048
-# ╟─5f6480e0-68ce-4a80-9970-dc6049ab8888
+# ╠═5f6480e0-68ce-4a80-9970-dc6049ab8888
 # ╠═2f554504-415d-4ad6-8b7c-e193221a3213
 # ╠═72a9962e-ecbe-4225-b5c5-7b5d2017ca7d
 # ╠═14fd1a93-6123-4a28-833c-5ca20c3efb79
@@ -495,6 +502,7 @@ References
 # ╠═488642c1-ffc3-4e7c-98d0-84bac47967ea
 # ╠═026887ca-4ed2-4192-a730-8f0fcd934d07
 # ╠═84ff2a7f-4484-4264-916c-4fe64601446e
+# ╠═e265dd8e-e01f-4c23-a90d-180d87058207
 # ╠═a07a06f8-7ed3-4ec0-8a88-af07cccd4def
 # ╟─92861ca5-ce68-4874-8451-c81b54772826
 # ╟─b98c561d-01d9-4ca5-82a4-2d87f19bb494
