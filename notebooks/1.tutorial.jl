@@ -7,8 +7,8 @@ using InteractiveUtils
 # ╔═╡ 0aae83c1-d0e7-435e-8446-164a2bdc9696
 begin
 	using Pkg
-	Pkg.activate(".")
-	Pkg.build("PyCall")
+	Pkg.activate(".");
+	Pkg.build("PyCall");
 end
 
 # ╔═╡ 9f9230a7-6900-42b3-a3c6-df303c9d9f39
@@ -176,6 +176,17 @@ md"- Type hinting with Multiple Dispatch provides enough information for the com
 # ╔═╡ 83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
 methods(+)[1:10]
 
+# ╔═╡ db3bb766-e707-45b3-a7a6-e9f0ef9a7e80
+md"
+## Icing on the cake
+- Julia supports unicode 
+"
+
+# ╔═╡ fb854b24-6081-4a68-8ab1-82b7e95a2714
+begin
+	println("Ain't nobody likes to read lambda gamma pi, show me the unicode λ, γ, π.")
+end
+
 # ╔═╡ 6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 md"
 # Installation and Setup
@@ -289,12 +300,25 @@ md"
 md"
 # Examples
 ## ED
-Let us demonstrate the Exact Diagonalization of a 1D Heisenberg XXX model.
-Imprtant method that is brain free , so could be used as unittest
+- We are all expert in ED
+- Important algorithm for benchmarking
+- Demonstrate ED of a 1D Heisenberg XXZ model.
+- Construct Hamiltonian using `Yao.jl`
+"
+
+# ╔═╡ 356cd762-e438-47c7-97b8-3f08b02048f3
+md"
+### Yao
+- Yao is an Extensible, Efficient Quantum Algorithm Design library For Humans written and maintained by Xiuezhe (Roger) Luo and Jin-Guo Liu
+
+![Roger Luo](./resources/imgs/roger.png)
+![Jin-Guo Liu](./resources/imgs/jinguo.png)
+![Yao.jl]()
+- Construction of Hamiltonian as Sparse Matrices
 "
 
 # ╔═╡ 7f8975e7-9558-46c3-8348-0a53148a5c23
-function make_hamiltonian(L::Int, J::Real, h::Real; periodic::Bool=false)
+function make_XXZhamiltonian(L::Int, J::Real, h::Real; periodic::Bool=false)
     # construct the Hamiltonian
     # L: number of sites
     # J: coupling strength
@@ -303,17 +327,84 @@ function make_hamiltonian(L::Int, J::Real, h::Real; periodic::Bool=false)
     hamiltonian = sum(put(L,i=>Z) for i in 1:L)
     offset = periodic ? 0 : 1
     for pauli in [X,Y,Z]
-    hamiltonian += sum(kron(L, i=>pauli , mod1(i+1, L)=>pauli) for i in 1:L-offset)
+    	hamiltonian += sum(kron(L, i=>pauli , mod1(i+1, L)=>pauli) for i in 1:L-offset)
     end
 
     return hamiltonian
 end
 
 # ╔═╡ 28b9449a-95d2-4864-8cbd-9eb99d5611b0
-ham = make_hamiltonian(10, 1.0, 0.0; periodic=true)
+ham = make_XXZhamiltonian(10, 1.0, 0.0; periodic=true)
+
 
 # ╔═╡ 981da071-b446-4b43-a1b1-9a809179e048
+# I can fit 22 qubits, good!
 mat(ham)
+
+# ╔═╡ 5f6480e0-68ce-4a80-9970-dc6049ab8888
+md"
+#### Under the hood
+- Pauli Matrices are constructed as sparse matrices
+`(:Y, PermMatrix([2, 1], ConstGateDefaultType[-im, im]))`
+[code](https://github.com/QuantumBFS/Yao.jl/blob/cfde9f072b56e830bc91fa27f51a121912eff130/lib/YaoBlocks/src/primitive/const_gate_gen.jl)
+"
+
+# ╔═╡ 2f554504-415d-4ad6-8b7c-e193221a3213
+mat(Y)
+
+# ╔═╡ 72a9962e-ecbe-4225-b5c5-7b5d2017ca7d
+begin
+	yy = mat(kron(2,Y,Y));
+	println(yy.perm)
+	println(yy.vals)
+	xx = mat(kron(2,X,X));
+end
+
+# ╔═╡ 14fd1a93-6123-4a28-833c-5ca20c3efb79
+begin
+	xxpyy = sum([kron(2,X,X),kron(2,Y,Y)])
+	mat(xxpyy)
+end
+
+# ╔═╡ f2e9efd9-76d3-461a-bf55-3a4916673dc1
+md"
+### Outside of Spin 1/2
+Of course, there are ways to construct Hamiltonian constructed from other basis like Gell-Mann matrices
+"
+
+# ╔═╡ 3906d7ad-a934-4fc0-9f63-266006fc25d8
+begin
+@const_gate Gell1 = PermMatrix([2,1,3],ComplexF64[1,1,0]) nlevel=3 
+@const_gate Gell2 = PermMatrix([2,1,3],ComplexF64[-im,im,0]) nlevel=3
+@const_gate Gell3 = Diagonal(ComplexF64[1,-1,0]) nlevel=3
+end
+
+# ╔═╡ f87f65e8-770c-46b7-a416-df1cfa16f917
+function make_spin1hamiltonian(L::Int, J::Real, h::Real; periodic::Bool=false)
+    # construct the Hamiltonian
+    # L: number of sites
+    # J: coupling strength
+    # h: magnetic field strength
+    # return: Hamiltonian
+    hamiltonian = sum(put(L,i=>Gell3) for i in 1:L)
+    offset = periodic ? 0 : 1
+    for gell in [Gell1,Gell2,Gell3]
+    	hamiltonian += sum(kron(L, i=>gell , mod1(i+1, L)=>gell) for i in 1:L-offset)
+    end
+
+    return hamiltonian
+end
+
+# ╔═╡ 6d3c3d49-b7fb-4057-a6c6-6ac9a7090340
+ham_spin1 = make_spin1hamiltonian(10,1,1;periodic=true)
+
+# ╔═╡ 488642c1-ffc3-4e7c-98d0-84bac47967ea
+mat(ham_spin1)
+
+# ╔═╡ 026887ca-4ed2-4192-a730-8f0fcd934d07
+md"
+### Eigenvalue solving
+"
 
 # ╔═╡ 84ff2a7f-4484-4264-916c-4fe64601446e
 # ╠═╡ disabled = true
@@ -380,16 +471,29 @@ References
 # ╟─69738959-95a3-46b4-9124-5db1160c1295
 # ╟─5f48ed39-078a-4eec-839d-b750c0faf8d5
 # ╠═83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
+# ╠═db3bb766-e707-45b3-a7a6-e9f0ef9a7e80
+# ╠═fb854b24-6081-4a68-8ab1-82b7e95a2714
 # ╠═6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 # ╟─60126082-d482-4549-affe-363bd8a24556
 # ╟─4177977c-462a-49a6-afd7-5a83b7cb3c7e
 # ╟─a5c07334-7ea0-4963-b3e7-088c39c44175
 # ╟─aff93d69-e2ff-4d1e-b5c2-728c484d80fa
 # ╠═7ced479f-0d0e-4b94-834c-b3885ef077a6
-# ╠═dd4ea4a2-9e06-43f7-976b-0c9af661cc8e
-# ╟─7f8975e7-9558-46c3-8348-0a53148a5c23
+# ╟─dd4ea4a2-9e06-43f7-976b-0c9af661cc8e
+# ╠═356cd762-e438-47c7-97b8-3f08b02048f3
+# ╠═7f8975e7-9558-46c3-8348-0a53148a5c23
 # ╠═28b9449a-95d2-4864-8cbd-9eb99d5611b0
 # ╠═981da071-b446-4b43-a1b1-9a809179e048
+# ╟─5f6480e0-68ce-4a80-9970-dc6049ab8888
+# ╠═2f554504-415d-4ad6-8b7c-e193221a3213
+# ╠═72a9962e-ecbe-4225-b5c5-7b5d2017ca7d
+# ╠═14fd1a93-6123-4a28-833c-5ca20c3efb79
+# ╠═f2e9efd9-76d3-461a-bf55-3a4916673dc1
+# ╠═3906d7ad-a934-4fc0-9f63-266006fc25d8
+# ╠═f87f65e8-770c-46b7-a416-df1cfa16f917
+# ╠═6d3c3d49-b7fb-4057-a6c6-6ac9a7090340
+# ╠═488642c1-ffc3-4e7c-98d0-84bac47967ea
+# ╠═026887ca-4ed2-4192-a730-8f0fcd934d07
 # ╠═84ff2a7f-4484-4264-916c-4fe64601446e
 # ╠═a07a06f8-7ed3-4ec0-8a88-af07cccd4def
 # ╟─92861ca5-ce68-4874-8451-c81b54772826
