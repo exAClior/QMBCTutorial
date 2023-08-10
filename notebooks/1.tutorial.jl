@@ -37,6 +37,11 @@ begin
     using KrylovKit
 end
 
+# ╔═╡ 3d0e81de-5592-41aa-9926-a28e12ab5be4
+begin 
+	using ITensors
+end
+
 # ╔═╡ 0d49dbcd-b3d2-4965-b0b7-1de58f72025e
 ChooseDisplayMode()
 
@@ -67,7 +72,11 @@ md"
 - What I cannot create, I do not understand -R.P Feynman 
 ![Feynman Quote](https://qph.cf2.quoracdn.net/main-qimg-87833c78a604ff07a82ff7787574e197.webp)
 - What language to use?
+![A Few Criterions](https://pbs.twimg.com/media/F3IROZ6WsAA_74B?format=jpg&name=medium)
 "
+
+# ╔═╡ 161651c7-25cc-4abd-a2d8-3ebd050d9e2f
+
 
 # ╔═╡ 57684dc8-31f9-11ee-2888-770b687183aa
 md"
@@ -334,8 +343,7 @@ function make_XXZhamiltonian(L::Int, J::Real, Jz::Real; periodic::Bool=false)
 end
 
 # ╔═╡ 28b9449a-95d2-4864-8cbd-9eb99d5611b0
-ham = make_XXZhamiltonian(22, 1.0, 0.0; periodic=true)
-
+ham = make_XXZhamiltonian(10, 1.0, 1.0; periodic=true)
 
 # ╔═╡ 981da071-b446-4b43-a1b1-9a809179e048
 # I can fit 22 qubits, good!
@@ -369,9 +377,9 @@ end
 
 # ╔═╡ f2e9efd9-76d3-461a-bf55-3a4916673dc1
 md"
-### Extending to Spin 1 systems
+### Extending to Fermi Hubbard Model
 - Julia makes extending existing libraries easy
-- E.g: extend `Yao.jl` to support creating 
+- E.g: extend `Yao.jl` to support creation and anhilation operators of a fermion
 "
 
 # ╔═╡ 3906d7ad-a934-4fc0-9f63-266006fc25d8
@@ -390,7 +398,8 @@ function make_fermhubbard(L::Int, t::Real, U::Real)
     # return: Hamiltonian
     hamiltonian = sum(U * kron(2*L,i=>n,mod1(i+1,2*L)=>n) for i in 1:2:2*L)
     hamiltonian += sum(t * kron(2*L, i=>cdagger , mod1(i+2, L)=>c) for i in 1:2:2*L)
-    hamiltonian += sum(t * kron(2*L, mod1(i+2,L)=>cdagger , i=>c) for i in 1:2:2*L)
+    hamiltonian += sum(t * kron(2*L, i=>c , mod1(i+2, L)=>cdagger) for i in 1:2:2*L)
+    hamiltonian += sum(t * kron(2*L, mod1(i+1,L)=>cdagger , i=>c) for i in 1:2:2*L)
 
     return hamiltonian
 end
@@ -405,27 +414,57 @@ mat(fermhubham)
 md"
 ### Eigenvalue solving
 - We will use `KrylovKit.jl`
-- 
+- It is a Julia package collecting a number of Krylov-based algorithms for linear problems, singular value and eigenvalue problems and the application of functions of linear maps or operators to vectors.
 "
+
+# ╔═╡ d92ca84d-e5a9-40be-bea2-63d4cfae608e
+@doc eigsolve
 
 # ╔═╡ 84ff2a7f-4484-4264-916c-4fe64601446e
-# ╠═╡ disabled = true
-#=╠═╡
-eigsolve(mat(ham))
-# let's dive into it
-# we should use symmetry to simplify the process https://www.youtube.com/watch?v=CoY5XwmFkF4
-# use MPSKit and etc
-  ╠═╡ =#
-
-# ╔═╡ e265dd8e-e01f-4c23-a90d-180d87058207
-md"
-We then use the `MPSKit.jl` with `TensorKit.jl` to utilize the symmetry in the Hamiltonian
-"
+eigsolve(mat(ham), 3, :SR,ishermitian=true)
 
 # ╔═╡ a07a06f8-7ed3-4ec0-8a88-af07cccd4def
 md"
 ## DMRG
+- If you want to be a happy API caller, just use `Itensors.jl`
+- `Itensor.jl` is a library for rapidly creating correct and efficient tensor network algorithms
+### Hamiltonian
+- We create Matrix Product Operator using ITensor interface
+- The same XXZ Model as in ED section 
 "
+
+# ╔═╡ 863ab90d-cd39-412d-9973-fbf6615802f8
+function make_xxzmpo(L::Int, J::Real, Jz::Real; periodic::Bool=false)
+    sites = siteinds("S=1/2", L)
+    ham = OpSum()
+    offset = periodic ? 0 : 1
+    for i in 1:L-offset
+        ham += J/2, "S+", i, "S-", mod1(i+1,L)
+        ham += J/2, "S-", i, "S+", mod1(i+1,L)
+        ham += Jz, "Sz", i, "Sz", mod1(i+1,L)
+    end
+    return MPO(ham, sites), sites
+end
+
+# ╔═╡ 1efcce00-9b0a-497b-8841-773ac30bed75
+xxzmpo, xxzsites = make_xxzmpo(100,1.0,1.0;periodic=true)
+
+# ╔═╡ 25528a3b-21d8-412f-b4b3-7fe216fa61c7
+function do_dmrg(H,sites,psi0_i,sweeps::Int, maxdims::Vector{Int},cutoff::Float64)
+    # Do 10 sweeps of DMRG, gradually
+    # increasing the maximum MPS
+    # bond dimension
+    sweeps = Sweeps(sweeps)
+    setmaxdim!(sweeps,maxdims...)
+    setcutoff!(sweeps,cutoff) # Run the DMRG algorithm
+    energy,psi0 = dmrg(H,psi0_i,sweeps)
+end
+
+# ╔═╡ f28b5a97-7ab2-45d7-90e0-2e56f040420a
+begin
+	psi0 = randomMPS(xxzsites; linkdims=10)
+	do_dmrg(xxzmpo,xxzsites,psi0,30,[10,20,100,100,200],1e-10)
+end
 
 # ╔═╡ 92861ca5-ce68-4874-8451-c81b54772826
 md"
@@ -453,15 +492,17 @@ References
 - [Setting Up Julia PkgServer](https://discourse.juliacn.com/t/topic/2969)
 - [Is Julia Static or Dynamic](https://stackoverflow.com/questions/28078089/is-julia-dynamically-typed)
 - [Steven Johnson Lecture](https://www.youtube.com/watch?v=6JcMuFgnA6U)
+- [The ITensor Software Library for Tensor Network Calculations](https://arxiv.org/abs/2007.14822)
 "
 
 # ╔═╡ Cell order:
-# ╟─0aae83c1-d0e7-435e-8446-164a2bdc9696
+# ╠═0aae83c1-d0e7-435e-8446-164a2bdc9696
 # ╟─9f9230a7-6900-42b3-a3c6-df303c9d9f39
 # ╟─0d49dbcd-b3d2-4965-b0b7-1de58f72025e
 # ╟─b47de57f-ee37-4a92-b99d-1a3763c31a3f
 # ╟─0a2a79cc-9a37-4f96-b422-1a529d6a689b
 # ╟─3cd5a1aa-5229-43b1-8016-47903a1dae6f
+# ╠═161651c7-25cc-4abd-a2d8-3ebd050d9e2f
 # ╟─57684dc8-31f9-11ee-2888-770b687183aa
 # ╠═1e84d230-2548-4da7-bc10-1ad2efcf14f4
 # ╟─7a2729c6-261f-498c-a3f7-f6ed0a383e0f
@@ -478,7 +519,7 @@ References
 # ╟─69738959-95a3-46b4-9124-5db1160c1295
 # ╟─5f48ed39-078a-4eec-839d-b750c0faf8d5
 # ╠═83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
-# ╠═db3bb766-e707-45b3-a7a6-e9f0ef9a7e80
+# ╟─db3bb766-e707-45b3-a7a6-e9f0ef9a7e80
 # ╠═fb854b24-6081-4a68-8ab1-82b7e95a2714
 # ╠═6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 # ╟─60126082-d482-4549-affe-363bd8a24556
@@ -500,9 +541,14 @@ References
 # ╠═f87f65e8-770c-46b7-a416-df1cfa16f917
 # ╠═6d3c3d49-b7fb-4057-a6c6-6ac9a7090340
 # ╠═488642c1-ffc3-4e7c-98d0-84bac47967ea
-# ╠═026887ca-4ed2-4192-a730-8f0fcd934d07
+# ╟─026887ca-4ed2-4192-a730-8f0fcd934d07
+# ╠═d92ca84d-e5a9-40be-bea2-63d4cfae608e
 # ╠═84ff2a7f-4484-4264-916c-4fe64601446e
-# ╠═e265dd8e-e01f-4c23-a90d-180d87058207
 # ╠═a07a06f8-7ed3-4ec0-8a88-af07cccd4def
+# ╠═863ab90d-cd39-412d-9973-fbf6615802f8
+# ╠═1efcce00-9b0a-497b-8841-773ac30bed75
+# ╠═25528a3b-21d8-412f-b4b3-7fe216fa61c7
+# ╠═f28b5a97-7ab2-45d7-90e0-2e56f040420a
+# ╟─3d0e81de-5592-41aa-9926-a28e12ab5be4
 # ╟─92861ca5-ce68-4874-8451-c81b54772826
 # ╟─b98c561d-01d9-4ca5-82a4-2d87f19bb494

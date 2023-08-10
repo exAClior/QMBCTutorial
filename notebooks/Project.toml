@@ -1,5 +1,6 @@
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+ITensors = "9136182c-28ba-11e9-034c-db9fb085ebd5"
 KrylovKit = "0b1a1467-8014-51b9-945f-bf0ae24f4b77"
 Luxor = "ae8d54c2-7ccd-5906-9d76-62fc9837b5bc"
 MPSKit = "bb1c41ca-d63c-52ed-829e-0820dda26502"
