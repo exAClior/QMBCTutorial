@@ -23,6 +23,9 @@ using Libdl
 # ╔═╡ 36d487e3-f8a6-460d-98db-06e65b5dcd51
 using PyCall
 
+# ╔═╡ 748bc89c-43ac-462b-910d-c4b9489008b3
+using BenchmarkTools
+
 # ╔═╡ cfaa7ee8-8de8-4933-8396-0350408a14b4
 begin 
 	using Plots, Luxor
@@ -72,22 +75,22 @@ md"
 ![A Few Criterions](https://pbs.twimg.com/media/F3IROZ6WsAA_74B?format=jpg&name=medium)
 "
 
+# ╔═╡ 4014f300-ee54-4681-8a39-9945588c7641
+
+
 # ╔═╡ 57684dc8-31f9-11ee-2888-770b687183aa
-md"
+md"""
 # Why Julia?
 ## Short Answer
 - Julia allows creation of **high performance** scientific computation code with **ease**!
 
 ## What is Julia?
-- Julia is a **dynamic** programming language with the goal of being **easy to be made fast**.
+Julia is an **unconventional dynamic** programming language with the goal of being **easy to be made fast**.
 
-### Dynamic
-- Shallow learning curve
-- Highly flexible 
-- Low performance
-- Two language problem
-- When is vectorized code bad?
-"
+- Shallow learning curve & highly flexible 
+- $(html"<s>Low performance</s>")
+- $(html"<s>Two language problem</s>")
+"""
 
 # ╔═╡ 1e84d230-2548-4da7-bc10-1ad2efcf14f4
 function sumtil(n::Int)
@@ -119,17 +122,25 @@ begin
 		    x += i
 		return x
 	"""
-	@time py"sumtil"(10000000);
-	@time sumtil(10000000);
-	@time c_sumtil(10000000);
+	@btime py"sumtil"(200000);
+	@btime sumtil(200000);
+	@btime c_sumtil(200000);
 end
+
+# ╔═╡ 5b4cf46e-317a-4276-ab12-037c2774cec9
+md"
+Same datatype and JIT makes calling C no performance penalty.
+? Is there performance penalty in PyCall
+checkbox for whether you want to rerun benchmark
+"
 
 # ╔═╡ bec0efb6-1f14-4e22-b01c-bbf992f29b52
 md"
 ### Easy to be made fast
 #### When is a program fast?
 - Computers are fast when it knows EXACTLY what to do
-- Slowness of Dynamic language is related to cache miss.
+- Box and Pointer Model
+- Slowness of a *typical* Dynamic language is related to cache miss.
 "
 
 # ╔═╡ 5b96435c-3edd-4230-9e77-79db8c8e2c8e
@@ -151,29 +162,17 @@ md"
 end 200 200
 
 # ╔═╡ 69738959-95a3-46b4-9124-5db1160c1295
-md"
+md"""
 #### Julia is different!
 - Julia has a well structured type system.
-- Julia assigns type information to expressions though *type inference* with the help of *type hinting* from users.
-- 'in static languages, expressions have types; in dynamic languages, values have types' - Stefan Karpinski
-"
+- Just ahead of time compilation with *Type Inference* 
+"""
 
-# ╔═╡ ca5aade1-df2f-4df8-92c6-5c66e33637ea
-supertypes(Float64)
-
-# ╔═╡ 5f48ed39-078a-4eec-839d-b750c0faf8d5
-md"
-- *Multiple Dispatch*
-- Just ahead of time compiler: aggressively optimizes code based on runtime type info
-- Code introspect `@code_llvm` easy to spot your performance lagging
-#### Summary:
-- Type inference with Multiple Dispatch provides enough information for the compiler to generate efficient machine code.
-1) Type hinting is a feature to tell compiler the types of parameter to a function call	
-2) Multiple Dispatch is a feature to dynamically dispatch function based on type information of function parameters 
-"
+# ╔═╡ c7e05c5e-5519-4230-806f-1fc37a1ff9ef
+@code_typed sumtil(10)
 
 # ╔═╡ 83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
-methods(+)[1:10]
+
 
 # ╔═╡ db3bb766-e707-45b3-a7a6-e9f0ef9a7e80
 md"
@@ -195,6 +194,7 @@ md"
 # ╔═╡ 6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 md"
 # Installation and Setup
+Installation Guide: [ CodingThrust/CodingClub](insert github link for coding club)
 ## Juliaup
 - `Juliaup` is a tool to manage Julia versions and installations.
 - It allows you to install multiple versions of Julia and switch between them easily.
@@ -235,11 +235,11 @@ Markdown.MD(
 
             **Linux and macOS**
             ```bash
-            export JULIAUP_SERVER=https://mirrors.tuna.tsinghua.edu.cn/julia-releases
+            export JULIAUP_SERVER=https://mirror.nju.edu.cn/julia-releases/
             ```
             **Windows**
             ```PowerShell
-            $env:JULIAUP_SERVER="https://mirrors.tuna.tsinghua.edu.cn/julia-releases"
+            $env:JULIAUP_SERVER="https://mirror.nju.edu.cn/julia-releases/"
             ```
             """,
         ],
@@ -301,20 +301,34 @@ md"
 ![VSCode Julia Layout](https://code.visualstudio.com/assets/docs/languages/julia/overview.png)
 "
 
-# ╔═╡ 7ced479f-0d0e-4b94-834c-b3885ef077a6
+# ╔═╡ 9d050c0c-163e-4337-a470-41bd3b02e4cf
 md"
-# Examples
-## ED
-- We are all expert in ED
+# How to program:
+- Multiple Dispatch
+- Type inference with Multiple Dispatch provides enough information for the compiler to generate efficient machine code.
+1) Type hinting is a feature to tell compiler the types of parameter to a function call	
+2) Multiple Dispatch is a feature to dynamically dispatch function based on type information of function parameters 
+"
+
+# ╔═╡ 88ac0cea-c370-4505-bb6e-7e132b313b54
+methods(+)[1:10]
+
+# ╔═╡ 7ced479f-0d0e-4b94-834c-b3885ef077a6
+md"""
+# Ecosystem
+## Exact Diagonalization
+- We are all experts in ED
 - Important algorithm for benchmarking
 - Demonstrate ED of a 1D Heisenberg XXZ model: $$H = \sum_{<i,j>} J \sigma_i^x \sigma_j^x + J \sigma_i^y \sigma_j^y + J_z \sigma_i^z\sigma_j^z$$
 - Construct Hamiltonian using `Yao.jl`
-"
+- More professionally [ExactDiagonalization.jl](https://github.com/Quantum-Many-Body/ExactDiagonalization.jl)
+"""
 
 # ╔═╡ 356cd762-e438-47c7-97b8-3f08b02048f3
 md"
 ### Yao
 - Yao is an Extensible, Efficient Quantum Algorithm Design library For Humans written and maintained by Xiuzhe (Roger) Luo and Jin-Guo Liu
+- [arXiv:1912.10877](https://arxiv.org/abs/1912.10877)
 
 ![Roger Luo](./resources/imgs/roger.png)
 ![Jin-Guo Liu](./resources/imgs/jinguo.png)
@@ -330,16 +344,16 @@ function make_XXZhamiltonian(L::Int, J::Real, Jz::Real; periodic::Bool=false)
     # Jz: coupling strength between pauli Z
     # return: Hamiltonian
     offset = periodic ? 0 : 1
-    hamiltonian = sum(Jz * kron(L, i=>Z, mod1(i+1,L)=>Z) for i in 1:L-offset)
+    hamiltonian = sum([Jz * kron(L, i=>Z, mod1(i+1,L)=>Z) for i in 1:L-offset])
     for pauli in [X,Y]
-    	hamiltonian += sum(J * kron(L, i=>pauli , mod1(i+1, L)=>pauli) for i in 1:L-offset)
+    	hamiltonian += sum([J * kron(L, i=>pauli , mod1(i+1, L)=>pauli) for i in 1:L-offset])
     end
 
     return hamiltonian
 end
 
 # ╔═╡ 28b9449a-95d2-4864-8cbd-9eb99d5611b0
-ham = make_XXZhamiltonian(20, 1.0, 1.0; periodic=false)
+ham = make_XXZhamiltonian(22, 1.0, 1.0; periodic=false)
 
 # ╔═╡ 981da071-b446-4b43-a1b1-9a809179e048
 # I can fit 22 qubits, good!
@@ -376,6 +390,7 @@ md"
 ### Extending to Fermi Hubbard Model
 - Julia makes extending existing libraries easy
 - E.g: extend `Yao.jl` to support creation and anhilation operators of a fermion
+$H = \sum_{\langle i,j \rangle}$???
 "
 
 # ╔═╡ 3906d7ad-a934-4fc0-9f63-266006fc25d8
@@ -392,12 +407,12 @@ function make_fermhubbard(L::Int, t::Real, U::Real)
     # t: hopping strength
     # U: onsite interaction strength
     # return: Hamiltonian
-    hamiltonian = sum(U * kron(2*L,i=>n,mod1(i+1,2*L)=>n) for i in 1:2:2*L)
-    hamiltonian += sum(t * kron(2*L, i=>cdagger , mod1(i+2, L)=>c) for i in 1:2:2*L)
-    hamiltonian += sum(t * kron(2*L, i=>c , mod1(i+2, L)=>cdagger) for i in 1:2:2*L)
-    hamiltonian += sum(t * kron(2*L, mod1(i+1,L)=>cdagger , i=>c) for i in 1:2:2*L)
+    hamiltonian = sum([U * kron(2*L,i=>n,mod1(i+1,2*L)=>n) for i in 1:2:2*L])
+    hamiltonian += sum([t * kron(2*L, i=>cdagger , mod1(i+2, L)=>c) for i in 1:2:2*L])
+    hamiltonian += sum([t * kron(2*L, i=>c , mod1(i+2, L)=>cdagger) for i in 1:2:2*L])
+    hamiltonian += sum([t * kron(2*L, mod1(i+1,L)=>cdagger , i=>c) for i in 1:2:2*L])
 
-    return hamiltonian
+    return hamiltonian # compare with MPSKit
 end
 
 # ╔═╡ 6d3c3d49-b7fb-4057-a6c6-6ac9a7090340
@@ -414,16 +429,25 @@ md"
 "
 
 # ╔═╡ d92ca84d-e5a9-40be-bea2-63d4cfae608e
-@doc eigsolve
+#@doc eigsolve
 
 # ╔═╡ 84ff2a7f-4484-4264-916c-4fe64601446e
 eigsolve(mat(ham), 3, :SR,ishermitian=true)
 
+# ╔═╡ 9cb12308-4748-47ac-af03-6125e4bb01b5
+md"""
+### Time Evolution
+Using Yao, show how to do
+"""
+
+# ╔═╡ d66e9b29-0692-4ebc-b5bf-3cbc6e1f34a9
+
+
 # ╔═╡ a07a06f8-7ed3-4ec0-8a88-af07cccd4def
 md"
 ## DMRG
-- If you want to be a happy API caller, just use `Itensors.jl`
-- `Itensor.jl` is a library for rapidly creating correct and efficient tensor network algorithms
+- If you want to be a happy API caller, just use `ITensors.jl`
+- `ITensors.jl` is a library for rapidly creating correct and efficient tensor network algorithms
 ### Hamiltonian
 - We create Matrix Product Operator using ITensor interface
 - The same XXZ Model as in ED section 
@@ -462,6 +486,19 @@ begin
 	do_dmrg(xxzmpo,xxzsites,psi0,10,[10,20,50,60,80,100,120,140,160,180,200],1e-11)
 end
 
+# ╔═╡ d81aa3cb-c485-4005-8d94-2e3dd6845ef3
+md"""
+## MC
+MC people, your master has converted https://physics.bu.edu/~py502/
+"""
+
+# ╔═╡ b7df2141-2878-494a-882b-b794fd7f9d15
+md"""
+# OMEinsum
+Follow Prof. Ran's lecture, flexible time, live coding
+introduce einsum notation
+"""
+
 # ╔═╡ 92861ca5-ce68-4874-8451-c81b54772826
 md"
 # Information
@@ -498,36 +535,40 @@ References
 # ╟─b47de57f-ee37-4a92-b99d-1a3763c31a3f
 # ╟─0a2a79cc-9a37-4f96-b422-1a529d6a689b
 # ╟─3cd5a1aa-5229-43b1-8016-47903a1dae6f
-# ╟─57684dc8-31f9-11ee-2888-770b687183aa
+# ╠═4014f300-ee54-4681-8a39-9945588c7641
+# ╠═57684dc8-31f9-11ee-2888-770b687183aa
 # ╠═1e84d230-2548-4da7-bc10-1ad2efcf14f4
 # ╟─7a2729c6-261f-498c-a3f7-f6ed0a383e0f
 # ╠═57cc9fed-b719-45e1-8a66-92779275b4ed
 # ╠═697aee80-e7c9-4f27-9408-f44a2d835210
 # ╠═f45f49c5-597f-4be5-9359-3971d6cbf40e
 # ╠═36d487e3-f8a6-460d-98db-06e65b5dcd51
+# ╠═748bc89c-43ac-462b-910d-c4b9489008b3
 # ╠═5df12e78-bfb0-4806-9354-d17e277c4e63
+# ╠═5b4cf46e-317a-4276-ab12-037c2774cec9
 # ╠═bec0efb6-1f14-4e22-b01c-bbf992f29b52
 # ╟─5b96435c-3edd-4230-9e77-79db8c8e2c8e
 # ╟─cfaa7ee8-8de8-4933-8396-0350408a14b4
 # ╠═69738959-95a3-46b4-9124-5db1160c1295
-# ╠═ca5aade1-df2f-4df8-92c6-5c66e33637ea
-# ╠═5f48ed39-078a-4eec-839d-b750c0faf8d5
+# ╠═c7e05c5e-5519-4230-806f-1fc37a1ff9ef
 # ╠═83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
 # ╟─db3bb766-e707-45b3-a7a6-e9f0ef9a7e80
 # ╠═fb854b24-6081-4a68-8ab1-82b7e95a2714
-# ╟─6d248884-18cc-4ee2-a411-924dfe25d5ac
-# ╠═6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
+# ╠═6d248884-18cc-4ee2-a411-924dfe25d5ac
+# ╟─6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 # ╟─60126082-d482-4549-affe-363bd8a24556
 # ╟─4177977c-462a-49a6-afd7-5a83b7cb3c7e
-# ╠═a5c07334-7ea0-4963-b3e7-088c39c44175
+# ╟─a5c07334-7ea0-4963-b3e7-088c39c44175
 # ╟─aff93d69-e2ff-4d1e-b5c2-728c484d80fa
+# ╠═9d050c0c-163e-4337-a470-41bd3b02e4cf
+# ╠═88ac0cea-c370-4505-bb6e-7e132b313b54
 # ╠═7ced479f-0d0e-4b94-834c-b3885ef077a6
 # ╟─dd4ea4a2-9e06-43f7-976b-0c9af661cc8e
 # ╠═356cd762-e438-47c7-97b8-3f08b02048f3
 # ╠═7f8975e7-9558-46c3-8348-0a53148a5c23
 # ╠═28b9449a-95d2-4864-8cbd-9eb99d5611b0
 # ╠═981da071-b446-4b43-a1b1-9a809179e048
-# ╠═5f6480e0-68ce-4a80-9970-dc6049ab8888
+# ╟─5f6480e0-68ce-4a80-9970-dc6049ab8888
 # ╠═2f554504-415d-4ad6-8b7c-e193221a3213
 # ╠═72a9962e-ecbe-4225-b5c5-7b5d2017ca7d
 # ╠═14fd1a93-6123-4a28-833c-5ca20c3efb79
@@ -536,14 +577,18 @@ References
 # ╠═f87f65e8-770c-46b7-a416-df1cfa16f917
 # ╠═6d3c3d49-b7fb-4057-a6c6-6ac9a7090340
 # ╠═488642c1-ffc3-4e7c-98d0-84bac47967ea
-# ╟─026887ca-4ed2-4192-a730-8f0fcd934d07
+# ╠═026887ca-4ed2-4192-a730-8f0fcd934d07
 # ╠═d92ca84d-e5a9-40be-bea2-63d4cfae608e
 # ╠═84ff2a7f-4484-4264-916c-4fe64601446e
+# ╠═9cb12308-4748-47ac-af03-6125e4bb01b5
+# ╠═d66e9b29-0692-4ebc-b5bf-3cbc6e1f34a9
 # ╠═a07a06f8-7ed3-4ec0-8a88-af07cccd4def
 # ╠═863ab90d-cd39-412d-9973-fbf6615802f8
 # ╠═1efcce00-9b0a-497b-8841-773ac30bed75
 # ╠═25528a3b-21d8-412f-b4b3-7fe216fa61c7
 # ╠═f28b5a97-7ab2-45d7-90e0-2e56f040420a
-# ╟─3d0e81de-5592-41aa-9926-a28e12ab5be4
+# ╠═3d0e81de-5592-41aa-9926-a28e12ab5be4
+# ╠═d81aa3cb-c485-4005-8d94-2e3dd6845ef3
+# ╠═b7df2141-2878-494a-882b-b794fd7f9d15
 # ╟─92861ca5-ce68-4874-8451-c81b54772826
 # ╟─b98c561d-01d9-4ca5-82a4-2d87f19bb494
