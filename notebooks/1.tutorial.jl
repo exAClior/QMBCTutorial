@@ -23,9 +23,6 @@ using Libdl
 # ╔═╡ 36d487e3-f8a6-460d-98db-06e65b5dcd51
 using PyCall
 
-# ╔═╡ cd026a50-6e6c-4828-9880-548ea249451a
-using BenchmarkTools
-
 # ╔═╡ cfaa7ee8-8de8-4933-8396-0350408a14b4
 begin 
 	using Plots, Luxor
@@ -74,9 +71,6 @@ md"
 - What language to use?
 ![A Few Criterions](https://pbs.twimg.com/media/F3IROZ6WsAA_74B?format=jpg&name=medium)
 "
-
-# ╔═╡ 161651c7-25cc-4abd-a2d8-3ebd050d9e2f
-
 
 # ╔═╡ 57684dc8-31f9-11ee-2888-770b687183aa
 md"
@@ -130,35 +124,15 @@ begin
 	@time c_sumtil(10000000);
 end
 
-# ╔═╡ 0684f0b3-3030-4297-9d5b-026ff166ee1f
-function naive_mc(Ntrials)
-    Nhits = 0
-    for _ in 1:Ntrials
-        x, y = rand(), rand()
-        if x^2 + y^2 <= 1
-            Nhits += 1
-        end
-    end
-    #println("π ≈ $(4*Nhits/Ntrials),I 💖 Julia")
-end
-
-# ╔═╡ e2633187-3b79-4c58-b2a3-8dc6d30b9b9c
-@btime naive_mc(10^7)
-
 # ╔═╡ bec0efb6-1f14-4e22-b01c-bbf992f29b52
 md"
-### Type Inference and Multiple Dispatch
+### Easy to be made fast
+#### When is a program fast?
 - Computers are fast when it knows EXACTLY what to do
 - Slowness of Dynamic language is related to cache miss.
-- User defined type needs to conform to Julia type system
-- Just ahead of time compiler: aggressively optimizes code based on runtime type info
-- time to first plot
-- Code introspect `@code_llvm` easy to spot your performance lagging
 "
 
-
-
-# ╔═╡ 69738959-95a3-46b4-9124-5db1160c1295
+# ╔═╡ 5b96435c-3edd-4230-9e77-79db8c8e2c8e
 @drawsvg begin
 	x0 = -50
 	background("white")
@@ -176,8 +150,24 @@ md"
 	end
 end 200 200
 
+# ╔═╡ 69738959-95a3-46b4-9124-5db1160c1295
+md"
+#### Julia is different!
+- Julia has a well structured type system.
+- Julia assigns type information to expressions though *type inference* with the help of *type hinting* from users.
+- 'in static languages, expressions have types; in dynamic languages, values have types' - Stefan Karpinski
+"
+
+# ╔═╡ ca5aade1-df2f-4df8-92c6-5c66e33637ea
+supertypes(Float64)
+
 # ╔═╡ 5f48ed39-078a-4eec-839d-b750c0faf8d5
-md"- Type hinting with Multiple Dispatch provides enough information for the compiler to generate efficient machine code.
+md"
+- *Multiple Dispatch*
+- Just ahead of time compiler: aggressively optimizes code based on runtime type info
+- Code introspect `@code_llvm` easy to spot your performance lagging
+#### Summary:
+- Type inference with Multiple Dispatch provides enough information for the compiler to generate efficient machine code.
 1) Type hinting is a feature to tell compiler the types of parameter to a function call	
 2) Multiple Dispatch is a feature to dynamically dispatch function based on type information of function parameters 
 "
@@ -195,6 +185,12 @@ md"
 begin
 	println("Ain't nobody likes to read lambda gamma pi, show me the unicode λ, γ, π.")
 end
+
+# ╔═╡ 6d248884-18cc-4ee2-a411-924dfe25d5ac
+md"
+- Mature tool-chain
+- Easy environment management
+"
 
 # ╔═╡ 6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 md"
@@ -343,7 +339,7 @@ function make_XXZhamiltonian(L::Int, J::Real, Jz::Real; periodic::Bool=false)
 end
 
 # ╔═╡ 28b9449a-95d2-4864-8cbd-9eb99d5611b0
-ham = make_XXZhamiltonian(10, 1.0, 1.0; periodic=true)
+ham = make_XXZhamiltonian(20, 1.0, 1.0; periodic=false)
 
 # ╔═╡ 981da071-b446-4b43-a1b1-9a809179e048
 # I can fit 22 qubits, good!
@@ -439,15 +435,15 @@ function make_xxzmpo(L::Int, J::Real, Jz::Real; periodic::Bool=false)
     ham = OpSum()
     offset = periodic ? 0 : 1
     for i in 1:L-offset
-        ham += J/2, "S+", i, "S-", mod1(i+1,L)
-        ham += J/2, "S-", i, "S+", mod1(i+1,L)
-        ham += Jz, "Sz", i, "Sz", mod1(i+1,L)
+		ham += 4*J , "Sx",i,"Sx",mod1(i+1,L)
+		ham += 4*J , "Sy",i,"Sy",mod1(i+1,L)
+        ham += 4*Jz, "Sz", i, "Sz", mod1(i+1,L)
     end
     return MPO(ham, sites), sites
 end
 
 # ╔═╡ 1efcce00-9b0a-497b-8841-773ac30bed75
-xxzmpo, xxzsites = make_xxzmpo(100,1.0,1.0;periodic=true)
+xxzmpo, xxzsites = make_xxzmpo(20,1.0,1.0;periodic=false)
 
 # ╔═╡ 25528a3b-21d8-412f-b4b3-7fe216fa61c7
 function do_dmrg(H,sites,psi0_i,sweeps::Int, maxdims::Vector{Int},cutoff::Float64)
@@ -462,8 +458,8 @@ end
 
 # ╔═╡ f28b5a97-7ab2-45d7-90e0-2e56f040420a
 begin
-	psi0 = randomMPS(xxzsites; linkdims=10)
-	do_dmrg(xxzmpo,xxzsites,psi0,30,[10,20,100,100,200],1e-10)
+	psi0 = randomMPS(xxzsites;linkdims=10)
+	do_dmrg(xxzmpo,xxzsites,psi0,10,[10,20,50,60,80,100,120,140,160,180,200],1e-11)
 end
 
 # ╔═╡ 92861ca5-ce68-4874-8451-c81b54772826
@@ -496,13 +492,12 @@ References
 "
 
 # ╔═╡ Cell order:
-# ╠═0aae83c1-d0e7-435e-8446-164a2bdc9696
+# ╟─0aae83c1-d0e7-435e-8446-164a2bdc9696
 # ╟─9f9230a7-6900-42b3-a3c6-df303c9d9f39
 # ╟─0d49dbcd-b3d2-4965-b0b7-1de58f72025e
 # ╟─b47de57f-ee37-4a92-b99d-1a3763c31a3f
 # ╟─0a2a79cc-9a37-4f96-b422-1a529d6a689b
 # ╟─3cd5a1aa-5229-43b1-8016-47903a1dae6f
-# ╠═161651c7-25cc-4abd-a2d8-3ebd050d9e2f
 # ╟─57684dc8-31f9-11ee-2888-770b687183aa
 # ╠═1e84d230-2548-4da7-bc10-1ad2efcf14f4
 # ╟─7a2729c6-261f-498c-a3f7-f6ed0a383e0f
@@ -511,20 +506,20 @@ References
 # ╠═f45f49c5-597f-4be5-9359-3971d6cbf40e
 # ╠═36d487e3-f8a6-460d-98db-06e65b5dcd51
 # ╠═5df12e78-bfb0-4806-9354-d17e277c4e63
-# ╠═cd026a50-6e6c-4828-9880-548ea249451a
-# ╠═0684f0b3-3030-4297-9d5b-026ff166ee1f
-# ╠═e2633187-3b79-4c58-b2a3-8dc6d30b9b9c
-# ╟─bec0efb6-1f14-4e22-b01c-bbf992f29b52
+# ╠═bec0efb6-1f14-4e22-b01c-bbf992f29b52
+# ╟─5b96435c-3edd-4230-9e77-79db8c8e2c8e
 # ╟─cfaa7ee8-8de8-4933-8396-0350408a14b4
-# ╟─69738959-95a3-46b4-9124-5db1160c1295
-# ╟─5f48ed39-078a-4eec-839d-b750c0faf8d5
+# ╠═69738959-95a3-46b4-9124-5db1160c1295
+# ╠═ca5aade1-df2f-4df8-92c6-5c66e33637ea
+# ╠═5f48ed39-078a-4eec-839d-b750c0faf8d5
 # ╠═83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
 # ╟─db3bb766-e707-45b3-a7a6-e9f0ef9a7e80
 # ╠═fb854b24-6081-4a68-8ab1-82b7e95a2714
+# ╟─6d248884-18cc-4ee2-a411-924dfe25d5ac
 # ╠═6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 # ╟─60126082-d482-4549-affe-363bd8a24556
 # ╟─4177977c-462a-49a6-afd7-5a83b7cb3c7e
-# ╟─a5c07334-7ea0-4963-b3e7-088c39c44175
+# ╠═a5c07334-7ea0-4963-b3e7-088c39c44175
 # ╟─aff93d69-e2ff-4d1e-b5c2-728c484d80fa
 # ╠═7ced479f-0d0e-4b94-834c-b3885ef077a6
 # ╟─dd4ea4a2-9e06-43f7-976b-0c9af661cc8e
