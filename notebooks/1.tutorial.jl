@@ -79,11 +79,11 @@ html"""
 # ╔═╡ 3cd5a1aa-5229-43b1-8016-47903a1dae6f
 md"""
 # Motivation
-- "What I cannot create, I do not understand" -R.P Feynman 
+## "What I cannot create, I do not understand" -R.P Feynman 
 ![Feynman Quote](https://qph.cf2.quoracdn.net/main-qimg-87833c78a604ff07a82ff7787574e197.webp)
-- What language to use?
+## What language to use?
 ![A Few Criterions](https://pbs.twimg.com/media/F3IROZ6WsAA_74B?format=jpg&name=medium)
-- (My) Answer
+## (My) Answer
 ![Answer](https://i.imgflip.com/7vlf1x.jpg)
 """
 
@@ -214,15 +214,61 @@ Installation Guide: [ CodingThrust/CodingClub](https://github.com/CodingThrust/C
 # ╔═╡ 9d050c0c-163e-4337-a470-41bd3b02e4cf
 md"""
 # How to program in Julia
-- Grammars: [Tutorial](https://www.youtube.com/watch?v=uiQpwMQZBTA)
-- Paradiam: *Multiple Dispatch*
-- Type inference with Multiple Dispatch provides enough information for the compiler to generate efficient machine code.
-1) Type hinting is a feature to tell compiler the types of parameter to a function call	
-2) Multiple Dispatch is a feature to dynamically dispatch function based on type information of function parameters 
+## Grammars: [Tutorial](https://www.youtube.com/watch?v=uiQpwMQZBTA)
+## Paradiam: *Multiple Dispatch*
+- Make your code generic for reusibility!
+-  Multiple dispatch is a programming paradigm "in which a function or method can be dynamically dispatched based on the run-time (dynamic) type or, in the more general case, some other attribute of more than one of its arguments."
+- "Single-dispatch polymorphism where a function or method call is dynamically dispatched based on the derived type of the object on which the method has been called."
 """
 
 # ╔═╡ 88ac0cea-c370-4505-bb6e-7e132b313b54
 methods(+)[1:10]
+
+# ╔═╡ 5b2e9872-6954-41ef-8047-f8c5cecd88ba
+begin
+	abstract type Pet end
+	struct Dog <: Pet
+		name::String 
+	end
+	struct Cat <: Pet
+		name::String 
+	end
+	function encounter(a::Pet, b::Pet)
+		verb = meets(a,b)
+		println("$(a.name) meets $(b.name) and $(verb)")
+	end
+
+	meets(a::Dog, b::Dog) = "sniffs"
+	meets(a::Dog, b::Cat) = "chases"
+	meets(a::Cat, b::Dog) = "hisses"
+	meets(a::Cat, b::Cat) = "slinks"
+end
+
+# ╔═╡ e25c3596-1dae-4e0e-b397-b75e77ef3984
+begin
+	sam = Dog("Sam");
+	bob = Dog("Bob");
+	erwin = Cat("Erwin");
+	tom = Cat("Tom");
+
+	encounter(sam, bob)
+	encounter(sam, erwin)
+	encounter(erwin, bob)
+	encounter(erwin, tom)
+
+end
+
+# ╔═╡ 2ec8c38d-8dd4-467e-a086-226cb24cbdad
+run(`clang++ lib/multidispatch.cpp -o pets`)
+
+# ╔═╡ 793f5963-fd2c-42e3-bfcd-c02a09834863
+run(`./pets`)
+
+# ╔═╡ b9160db9-ebdf-4c5e-b0f8-54035c125ca0
+md"
+Yeah, there's templates but .... 
+- Destroies code extendbility
+"
 
 # ╔═╡ 7ced479f-0d0e-4b94-834c-b3885ef077a6
 md"""
@@ -455,6 +501,15 @@ References
 - [The ITensor Software Library for Tensor Network Calculations](https://arxiv.org/abs/2007.14822)
 "
 
+# ╔═╡ 5d9ebbeb-6c69-470e-a832-83c1b46c10e1
+md"""
+# My sleves
+## Why not Python with Numba, Cython or PyPy?
+- Numba specializes on numerical computation, what if you want to operate on strings?
+- synergy between packages not well i.e numba and pandas
+- [Stefan's take on Python vs Julia](https://discourse.julialang.org/t/julia-motivation-why-werent-numpy-scipy-numba-good-enough/2236/10)
+"""
+
 # ╔═╡ Cell order:
 # ╟─0aae83c1-d0e7-435e-8446-164a2bdc9696
 # ╟─9f9230a7-6900-42b3-a3c6-df303c9d9f39
@@ -462,7 +517,7 @@ References
 # ╟─b47de57f-ee37-4a92-b99d-1a3763c31a3f
 # ╟─0a2a79cc-9a37-4f96-b422-1a529d6a689b
 # ╟─3cd5a1aa-5229-43b1-8016-47903a1dae6f
-# ╟─57684dc8-31f9-11ee-2888-770b687183aa
+# ╠═57684dc8-31f9-11ee-2888-770b687183aa
 # ╠═1e84d230-2548-4da7-bc10-1ad2efcf14f4
 # ╟─7a2729c6-261f-498c-a3f7-f6ed0a383e0f
 # ╠═57cc9fed-b719-45e1-8a66-92779275b4ed
@@ -486,6 +541,11 @@ References
 # ╟─6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 # ╠═9d050c0c-163e-4337-a470-41bd3b02e4cf
 # ╠═88ac0cea-c370-4505-bb6e-7e132b313b54
+# ╠═5b2e9872-6954-41ef-8047-f8c5cecd88ba
+# ╠═e25c3596-1dae-4e0e-b397-b75e77ef3984
+# ╠═2ec8c38d-8dd4-467e-a086-226cb24cbdad
+# ╠═793f5963-fd2c-42e3-bfcd-c02a09834863
+# ╠═b9160db9-ebdf-4c5e-b0f8-54035c125ca0
 # ╟─7ced479f-0d0e-4b94-834c-b3885ef077a6
 # ╟─dd4ea4a2-9e06-43f7-976b-0c9af661cc8e
 # ╟─356cd762-e438-47c7-97b8-3f08b02048f3
@@ -511,9 +571,10 @@ References
 # ╠═1efcce00-9b0a-497b-8841-773ac30bed75
 # ╠═25528a3b-21d8-412f-b4b3-7fe216fa61c7
 # ╠═f28b5a97-7ab2-45d7-90e0-2e56f040420a
-# ╠═50394dbd-a65f-4b25-9d57-1debacc16fba
+# ╟─50394dbd-a65f-4b25-9d57-1debacc16fba
 # ╟─d81aa3cb-c485-4005-8d94-2e3dd6845ef3
 # ╟─b7df2141-2878-494a-882b-b794fd7f9d15
 # ╟─92861ca5-ce68-4874-8451-c81b54772826
 # ╟─0fd67679-c034-46d8-ac88-51b2eb6b6d91
 # ╟─b98c561d-01d9-4ca5-82a4-2d87f19bb494
+# ╠═5d9ebbeb-6c69-470e-a832-83c1b46c10e1
