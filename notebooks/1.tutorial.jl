@@ -4,6 +4,16 @@
 using Markdown
 using InteractiveUtils
 
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
+        el
+    end
+end
+
 # ╔═╡ 0aae83c1-d0e7-435e-8446-164a2bdc9696
 begin
 	using Pkg
@@ -67,27 +77,26 @@ html"""
 """
 
 # ╔═╡ 3cd5a1aa-5229-43b1-8016-47903a1dae6f
-md"
+md"""
 # Motivation
-- What I cannot create, I do not understand -R.P Feynman 
+- "What I cannot create, I do not understand" -R.P Feynman 
 ![Feynman Quote](https://qph.cf2.quoracdn.net/main-qimg-87833c78a604ff07a82ff7787574e197.webp)
 - What language to use?
 ![A Few Criterions](https://pbs.twimg.com/media/F3IROZ6WsAA_74B?format=jpg&name=medium)
-"
-
-# ╔═╡ 4014f300-ee54-4681-8a39-9945588c7641
-
+- (My) Answer
+![Answer](https://i.imgflip.com/7vlf1x.jpg)
+"""
 
 # ╔═╡ 57684dc8-31f9-11ee-2888-770b687183aa
 md"""
 # Why Julia?
 ## Short Answer
-- Julia allows creation of **high performance** scientific computation code with **ease**!
+Julia allows creation of **high performance** scientific computation code with **ease**!
 
 ## What is Julia?
 Julia is an **unconventional dynamic** programming language with the goal of being **easy to be made fast**.
 
-- Shallow learning curve & highly flexible 
+- Shallow learning curve & high flexibility
 - $(html"<s>Low performance</s>")
 - $(html"<s>Two language problem</s>")
 """
@@ -127,13 +136,6 @@ begin
 	@btime c_sumtil(200000);
 end
 
-# ╔═╡ 5b4cf46e-317a-4276-ab12-037c2774cec9
-md"
-Same datatype and JIT makes calling C no performance penalty.
-? Is there performance penalty in PyCall
-checkbox for whether you want to rerun benchmark
-"
-
 # ╔═╡ bec0efb6-1f14-4e22-b01c-bbf992f29b52
 md"
 ### Easy to be made fast
@@ -165,14 +167,26 @@ end 200 200
 md"""
 #### Julia is different!
 - Julia has a well structured type system.
-- Just ahead of time compilation with *Type Inference* 
+- JIT(Just in time) compilation with *Type Inference* 
 """
 
 # ╔═╡ c7e05c5e-5519-4230-806f-1fc37a1ff9ef
-@code_typed sumtil(10)
+@code_typed 1.0 + 2.0
+
+# ╔═╡ f88c1e2a-13fd-4c29-8d2d-d55cea652944
+@code_typed 1 + 2
 
 # ╔═╡ 83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
+@code_native 1.0 + 2.0
 
+# ╔═╡ 0d451173-703c-4a6b-aae7-e6df6d41a0e1
+run(`gcc -S lib/add.c`);
+# why is python jit slow?
+
+# ╔═╡ 50a44767-617f-4c57-92f1-96391dee77e6
+with_terminal() do
+	run(`cat lib/add.s`)
+end
 
 # ╔═╡ db3bb766-e707-45b3-a7a6-e9f0ef9a7e80
 md"
@@ -194,121 +208,18 @@ md"
 # ╔═╡ 6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 md"
 # Installation and Setup
-Installation Guide: [ CodingThrust/CodingClub](insert github link for coding club)
-## Juliaup
-- `Juliaup` is a tool to manage Julia versions and installations.
-- It allows you to install multiple versions of Julia and switch between them easily.
-
-### Installing Juliaup
-- Enter the following commands in your terminal will install Juliaup.
-**Linux and macOS**
-```bash
-curl -fsSL https://install.julialang.org | sh
-```
-**Windows**
-```bash
-winget install julia -s msstore
-```
-"
-
-# ╔═╡ 60126082-d482-4549-affe-363bd8a24556
-Markdown.MD(
-    Markdown.Admonition(
-        "tip",
-        "Window Store:",
-        [
-            md"""
-            You can also install Juliaup directly from [Windows Store](https://www.microsoft.com/store/apps/9NJNWW8PVKMN).
-            """,
-        ],
-    ),
-)
-
-# ╔═╡ 4177977c-462a-49a6-afd7-5a83b7cb3c7e
-Markdown.MD(
-    Markdown.Admonition(
-        "hint",
-        "Alternative Juliaup Server",
-        [
-            md"""
-            If you are in China, you may need to specify another server for installing Juliaup.
-
-            **Linux and macOS**
-            ```bash
-            export JULIAUP_SERVER=https://mirror.nju.edu.cn/julia-releases/
-            ```
-            **Windows**
-            ```PowerShell
-            $env:JULIAUP_SERVER="https://mirror.nju.edu.cn/julia-releases/"
-            ```
-            """,
-        ],
-    ),
-)
-
-# ╔═╡ a5c07334-7ea0-4963-b3e7-088c39c44175
-md"
-## Installing Julia
-- Once you have installed Juliaup, you can install Julia by running the following command in your terminal.
-  ```bash
-  juliaup default 1.9
-  ```
-- To verify that Julia is installed, run the following command in your terminal.
-  ```bash
-  julia
-  ```
-- It should start a Julia REPL(Read-Eval-Print-Loop) session like this
-![REPL Session]()
-- If you wish to install a specific version of Julia, please refer to the [documentation](https://github.com/JuliaLang/juliaup).
-
-## Package Management
-- `Julia` has a mature eco-system for scientific computing.
-- 'Pkg' is the built-in package manager for Julia.
-- To enter the package manager, press `]` in the REPL.
-![PackageMangement](https://github.com/exAClior/QMBCTutorial/blob/ys/julia-tutorial/notebooks/resources/scripts/Packages.gif?raw=true)
-- The environment is indicated by the `(@v1.9)`.
-- To add a package, type `add <package name>`.
-
-### First Package: PkgServerClient.jl
-- Due to some special reasons, we need to install `PkgServerClient.jl` first.
-- You should first execute the following command
-
-  **Linux and macOS**
-  ```bash
-    export JULIA_PKG_SERVER='https://mirrors.nju.edu.cn/julia'
-  ```
-
-  **Windows**
-  ```PowerShell
-    $env:JULIA_PKG_SERVER='https://mirrors.nju.edu.cn/julia'
-  ```
-- Then you can add `PkgServerClient.jl` by typing `add PkgServerClient` in the package manager.
-- To make sure Julia uses the package automatically at startup, configure the `startup.jl` file.
-
-### More Packages
-- You may find more packages for scientific computing [here](https://juliahub.com/).
-![JuliaHub]()
-
-### Unittesting
-- Built-in unit testing
-![Unittest](https://github.com/exAClior/QMBCTutorial/blob/ys/julia-tutorial/notebooks/resources/scripts/unittest.gif?raw=true)
-"
-
-# ╔═╡ aff93d69-e2ff-4d1e-b5c2-728c484d80fa
-md"
-## Editor
-- TL;DR: use VSCode
-![VSCode Julia Layout](https://code.visualstudio.com/assets/docs/languages/julia/overview.png)
+Installation Guide: [ CodingThrust/CodingClub](https://github.com/CodingThrust/CodingClub/blob/main/julia/1.julia-setup.md)
 "
 
 # ╔═╡ 9d050c0c-163e-4337-a470-41bd3b02e4cf
-md"
-# How to program:
-- Multiple Dispatch
+md"""
+# How to program in Julia
+- Grammars: [Tutorial](https://www.youtube.com/watch?v=uiQpwMQZBTA)
+- Paradiam: *Multiple Dispatch*
 - Type inference with Multiple Dispatch provides enough information for the compiler to generate efficient machine code.
 1) Type hinting is a feature to tell compiler the types of parameter to a function call	
 2) Multiple Dispatch is a feature to dynamically dispatch function based on type information of function parameters 
-"
+"""
 
 # ╔═╡ 88ac0cea-c370-4505-bb6e-7e132b313b54
 methods(+)[1:10]
@@ -327,12 +238,11 @@ md"""
 # ╔═╡ 356cd762-e438-47c7-97b8-3f08b02048f3
 md"
 ### Yao
-- Yao is an Extensible, Efficient Quantum Algorithm Design library For Humans written and maintained by Xiuzhe (Roger) Luo and Jin-Guo Liu
+- [Yao.jl](https://github.com/QuantumBFS/Yao.jl) is an Extensible, Efficient Quantum Algorithm Design library For Humans written and maintained by Xiuzhe (Roger) Luo and Jin-Guo Liu
 - [arXiv:1912.10877](https://arxiv.org/abs/1912.10877)
 
-![Roger Luo](./resources/imgs/roger.png)
-![Jin-Guo Liu](./resources/imgs/jinguo.png)
-![Yao.jl]()
+![Roger Luo](https://pbs.twimg.com/profile_images/1136498887961849856/i2-m_GLr_400x400.jpg)
+![Jin-Guo Liu](https://avatars.githubusercontent.com/u/6257240?v=4)
 - Construction of Hamiltonian as Sparse Matrices
 "
 
@@ -352,8 +262,11 @@ function make_XXZhamiltonian(L::Int, J::Real, Jz::Real; periodic::Bool=false)
     return hamiltonian
 end
 
+# ╔═╡ ce2a6c63-5fa3-4633-8d23-144f7d8d825e
+md"""Number of sites: $(@bind nq Slider(10:22;default=10, show_value=true))"""
+
 # ╔═╡ 28b9449a-95d2-4864-8cbd-9eb99d5611b0
-ham = make_XXZhamiltonian(22, 1.0, 1.0; periodic=false)
+ham = make_XXZhamiltonian(nq, 1.0, 1.0; periodic=false)
 
 # ╔═╡ 981da071-b446-4b43-a1b1-9a809179e048
 # I can fit 22 qubits, good!
@@ -385,42 +298,6 @@ begin
 	mat(xxpyy)
 end
 
-# ╔═╡ f2e9efd9-76d3-461a-bf55-3a4916673dc1
-md"
-### Extending to Fermi Hubbard Model
-- Julia makes extending existing libraries easy
-- E.g: extend `Yao.jl` to support creation and anhilation operators of a fermion
-$H = \sum_{\langle i,j \rangle}$???
-"
-
-# ╔═╡ 3906d7ad-a934-4fc0-9f63-266006fc25d8
-begin
-	@const_gate cdagger = PermMatrix([2,1],ComplexF64[1,0])
-	@const_gate c = PermMatrix([2,1],ComplexF64[0,1])
-	@const_gate n = Diagonal(ComplexF64[0,1])
-end
-
-# ╔═╡ f87f65e8-770c-46b7-a416-df1cfa16f917
-function make_fermhubbard(L::Int, t::Real, U::Real)
-    # construct the Hamiltonian
-    # L: number of sites
-    # t: hopping strength
-    # U: onsite interaction strength
-    # return: Hamiltonian
-    hamiltonian = sum([U * kron(2*L,i=>n,mod1(i+1,2*L)=>n) for i in 1:2:2*L])
-    hamiltonian += sum([t * kron(2*L, i=>cdagger , mod1(i+2, L)=>c) for i in 1:2:2*L])
-    hamiltonian += sum([t * kron(2*L, i=>c , mod1(i+2, L)=>cdagger) for i in 1:2:2*L])
-    hamiltonian += sum([t * kron(2*L, mod1(i+1,L)=>cdagger , i=>c) for i in 1:2:2*L])
-
-    return hamiltonian # compare with MPSKit
-end
-
-# ╔═╡ 6d3c3d49-b7fb-4057-a6c6-6ac9a7090340
-fermhubham = make_fermhubbard(8,1,2)
-
-# ╔═╡ 488642c1-ffc3-4e7c-98d0-84bac47967ea
-mat(fermhubham)
-
 # ╔═╡ 026887ca-4ed2-4192-a730-8f0fcd934d07
 md"
 ### Eigenvalue solving
@@ -432,16 +309,47 @@ md"
 #@doc eigsolve
 
 # ╔═╡ 84ff2a7f-4484-4264-916c-4fe64601446e
-eigsolve(mat(ham), 3, :SR,ishermitian=true)
+eval_eds, vecs_ed, info_ed =  eigsolve(mat(ham), 3, :SR,ishermitian=true)
 
 # ╔═╡ 9cb12308-4748-47ac-af03-6125e4bb01b5
 md"""
 ### Time Evolution
-Using Yao, show how to do
+API for doing real time evolution and imaginary time evolution
 """
 
-# ╔═╡ d66e9b29-0692-4ebc-b5bf-3cbc6e1f34a9
+# ╔═╡ 966ec890-a580-4350-9f7b-25ff25bd521a
+@doc time_evolve
 
+# ╔═╡ f9213805-dce9-4903-8b7e-922b884bcf2a
+md"""Do Imaginary time evolution: $(@bind do_eval CheckBox(default=false))"""
+
+# ╔═╡ 81895e21-ba2a-40b8-a618-0de9cf1aaff8
+begin
+	if do_eval
+		evo_op = time_evolve(ham,-im*0.01;tol=1e-10,check_hermicity=false)
+		ψ = rand_state(nq)
+		for _ in 1:300
+			apply!(ψ,evo_op)
+			ψ = Yao.normalize!(ψ)
+		end
+		e_it = real(Yao.expect(ham,ψ));
+	end
+end
+
+# ╔═╡ c6633f9e-898f-4e7b-bc14-04d46a9ad563
+if do_eval
+Markdown.MD(
+    Markdown.Admonition(
+        "hint",
+        "Answer Comparison",
+        [
+            md"""
+            Relative error compare to Exact Diagonalization answer: $((e_it-eval_eds[1])/eval_eds[1])
+            """,
+        ],
+    ),
+)
+end
 
 # ╔═╡ a07a06f8-7ed3-4ec0-8a88-af07cccd4def
 md"
@@ -467,7 +375,7 @@ function make_xxzmpo(L::Int, J::Real, Jz::Real; periodic::Bool=false)
 end
 
 # ╔═╡ 1efcce00-9b0a-497b-8841-773ac30bed75
-xxzmpo, xxzsites = make_xxzmpo(20,1.0,1.0;periodic=false)
+xxzmpo, xxzsites = make_xxzmpo(nq,1.0,1.0;periodic=false)
 
 # ╔═╡ 25528a3b-21d8-412f-b4b3-7fe216fa61c7
 function do_dmrg(H,sites,psi0_i,sweeps::Int, maxdims::Vector{Int},cutoff::Float64)
@@ -483,13 +391,26 @@ end
 # ╔═╡ f28b5a97-7ab2-45d7-90e0-2e56f040420a
 begin
 	psi0 = randomMPS(xxzsites;linkdims=10)
-	do_dmrg(xxzmpo,xxzsites,psi0,10,[10,20,50,60,80,100,120,140,160,180,200],1e-11)
+	energy, ψ₀ = do_dmrg(xxzmpo,xxzsites,psi0,10,[10,20,50,60,80,100,120,140,160,180,200],1e-11)
 end
+
+# ╔═╡ 50394dbd-a65f-4b25-9d57-1debacc16fba
+Markdown.MD(
+    Markdown.Admonition(
+        "hint",
+        "Answer Comparison",
+        [
+            md"""
+            Relative error compare to Exact Diagonalization answer: $((energy-eval_eds[1])/eval_eds[1])
+            """,
+        ],
+    ),
+)
 
 # ╔═╡ d81aa3cb-c485-4005-8d94-2e3dd6845ef3
 md"""
-## MC
-MC people, your master has converted https://physics.bu.edu/~py502/
+## Monte Carlo
+- Ansers Sandvick's [course page](https://physics.bu.edu/~py502/)
 """
 
 # ╔═╡ b7df2141-2878-494a-882b-b794fd7f9d15
@@ -515,6 +436,12 @@ md"
   3) [GSoC](https://julialang.org/jsoc/#google_summer_of_code_gsoc)
 "
 
+# ╔═╡ 0fd67679-c034-46d8-ac88-51b2eb6b6d91
+md"""
+# Acknowledgements
+We appreciate the help of Jin-Guo Liu, Gui-Xin Liu, Shi-Gang Ou, and Rui-Si Wang during the preparation of this presentation.
+"""
+
 # ╔═╡ b98c561d-01d9-4ca5-82a4-2d87f19bb494
 md"
 #
@@ -535,8 +462,7 @@ References
 # ╟─b47de57f-ee37-4a92-b99d-1a3763c31a3f
 # ╟─0a2a79cc-9a37-4f96-b422-1a529d6a689b
 # ╟─3cd5a1aa-5229-43b1-8016-47903a1dae6f
-# ╠═4014f300-ee54-4681-8a39-9945588c7641
-# ╠═57684dc8-31f9-11ee-2888-770b687183aa
+# ╟─57684dc8-31f9-11ee-2888-770b687183aa
 # ╠═1e84d230-2548-4da7-bc10-1ad2efcf14f4
 # ╟─7a2729c6-261f-498c-a3f7-f6ed0a383e0f
 # ╠═57cc9fed-b719-45e1-8a66-92779275b4ed
@@ -545,50 +471,49 @@ References
 # ╠═36d487e3-f8a6-460d-98db-06e65b5dcd51
 # ╠═748bc89c-43ac-462b-910d-c4b9489008b3
 # ╠═5df12e78-bfb0-4806-9354-d17e277c4e63
-# ╠═5b4cf46e-317a-4276-ab12-037c2774cec9
-# ╠═bec0efb6-1f14-4e22-b01c-bbf992f29b52
+# ╟─bec0efb6-1f14-4e22-b01c-bbf992f29b52
 # ╟─5b96435c-3edd-4230-9e77-79db8c8e2c8e
 # ╟─cfaa7ee8-8de8-4933-8396-0350408a14b4
 # ╠═69738959-95a3-46b4-9124-5db1160c1295
 # ╠═c7e05c5e-5519-4230-806f-1fc37a1ff9ef
+# ╠═f88c1e2a-13fd-4c29-8d2d-d55cea652944
 # ╠═83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
+# ╠═0d451173-703c-4a6b-aae7-e6df6d41a0e1
+# ╠═50a44767-617f-4c57-92f1-96391dee77e6
 # ╟─db3bb766-e707-45b3-a7a6-e9f0ef9a7e80
 # ╠═fb854b24-6081-4a68-8ab1-82b7e95a2714
-# ╠═6d248884-18cc-4ee2-a411-924dfe25d5ac
+# ╟─6d248884-18cc-4ee2-a411-924dfe25d5ac
 # ╟─6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
-# ╟─60126082-d482-4549-affe-363bd8a24556
-# ╟─4177977c-462a-49a6-afd7-5a83b7cb3c7e
-# ╟─a5c07334-7ea0-4963-b3e7-088c39c44175
-# ╟─aff93d69-e2ff-4d1e-b5c2-728c484d80fa
 # ╠═9d050c0c-163e-4337-a470-41bd3b02e4cf
 # ╠═88ac0cea-c370-4505-bb6e-7e132b313b54
-# ╠═7ced479f-0d0e-4b94-834c-b3885ef077a6
+# ╟─7ced479f-0d0e-4b94-834c-b3885ef077a6
 # ╟─dd4ea4a2-9e06-43f7-976b-0c9af661cc8e
-# ╠═356cd762-e438-47c7-97b8-3f08b02048f3
+# ╟─356cd762-e438-47c7-97b8-3f08b02048f3
 # ╠═7f8975e7-9558-46c3-8348-0a53148a5c23
+# ╠═ce2a6c63-5fa3-4633-8d23-144f7d8d825e
 # ╠═28b9449a-95d2-4864-8cbd-9eb99d5611b0
 # ╠═981da071-b446-4b43-a1b1-9a809179e048
 # ╟─5f6480e0-68ce-4a80-9970-dc6049ab8888
 # ╠═2f554504-415d-4ad6-8b7c-e193221a3213
 # ╠═72a9962e-ecbe-4225-b5c5-7b5d2017ca7d
 # ╠═14fd1a93-6123-4a28-833c-5ca20c3efb79
-# ╠═f2e9efd9-76d3-461a-bf55-3a4916673dc1
-# ╠═3906d7ad-a934-4fc0-9f63-266006fc25d8
-# ╠═f87f65e8-770c-46b7-a416-df1cfa16f917
-# ╠═6d3c3d49-b7fb-4057-a6c6-6ac9a7090340
-# ╠═488642c1-ffc3-4e7c-98d0-84bac47967ea
-# ╠═026887ca-4ed2-4192-a730-8f0fcd934d07
+# ╟─026887ca-4ed2-4192-a730-8f0fcd934d07
 # ╠═d92ca84d-e5a9-40be-bea2-63d4cfae608e
 # ╠═84ff2a7f-4484-4264-916c-4fe64601446e
-# ╠═9cb12308-4748-47ac-af03-6125e4bb01b5
-# ╠═d66e9b29-0692-4ebc-b5bf-3cbc6e1f34a9
-# ╠═a07a06f8-7ed3-4ec0-8a88-af07cccd4def
+# ╟─9cb12308-4748-47ac-af03-6125e4bb01b5
+# ╠═966ec890-a580-4350-9f7b-25ff25bd521a
+# ╠═f9213805-dce9-4903-8b7e-922b884bcf2a
+# ╠═81895e21-ba2a-40b8-a618-0de9cf1aaff8
+# ╟─c6633f9e-898f-4e7b-bc14-04d46a9ad563
+# ╟─a07a06f8-7ed3-4ec0-8a88-af07cccd4def
+# ╠═3d0e81de-5592-41aa-9926-a28e12ab5be4
 # ╠═863ab90d-cd39-412d-9973-fbf6615802f8
 # ╠═1efcce00-9b0a-497b-8841-773ac30bed75
 # ╠═25528a3b-21d8-412f-b4b3-7fe216fa61c7
 # ╠═f28b5a97-7ab2-45d7-90e0-2e56f040420a
-# ╠═3d0e81de-5592-41aa-9926-a28e12ab5be4
-# ╠═d81aa3cb-c485-4005-8d94-2e3dd6845ef3
-# ╠═b7df2141-2878-494a-882b-b794fd7f9d15
+# ╠═50394dbd-a65f-4b25-9d57-1debacc16fba
+# ╟─d81aa3cb-c485-4005-8d94-2e3dd6845ef3
+# ╟─b7df2141-2878-494a-882b-b794fd7f9d15
 # ╟─92861ca5-ce68-4874-8451-c81b54772826
+# ╟─0fd67679-c034-46d8-ac88-51b2eb6b6d91
 # ╟─b98c561d-01d9-4ca5-82a4-2d87f19bb494
