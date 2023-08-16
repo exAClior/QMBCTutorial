@@ -181,7 +181,6 @@ md"""
 
 # ╔═╡ 0d451173-703c-4a6b-aae7-e6df6d41a0e1
 run(`gcc -S lib/add.c`);
-# why is python jit slow?
 
 # ╔═╡ 50a44767-617f-4c57-92f1-96391dee77e6
 with_terminal() do
@@ -216,13 +215,9 @@ md"""
 # How to program in Julia
 ## Grammars: [Tutorial](https://www.youtube.com/watch?v=uiQpwMQZBTA)
 ## Paradiam: *Multiple Dispatch*
-- Make your code generic for reusibility!
--  Multiple dispatch is a programming paradigm "in which a function or method can be dynamically dispatched based on the run-time (dynamic) type or, in the more general case, some other attribute of more than one of its arguments."
+-  Multiple dispatch is a programming paradigm "in which a function or method can be dynamically dispatched based on the run-time (dynamic) type of more than one of its arguments."
 - "Single-dispatch polymorphism where a function or method call is dynamically dispatched based on the derived type of the object on which the method has been called."
 """
-
-# ╔═╡ 88ac0cea-c370-4505-bb6e-7e132b313b54
-methods(+)[1:10]
 
 # ╔═╡ 5b2e9872-6954-41ef-8047-f8c5cecd88ba
 begin
@@ -238,6 +233,7 @@ begin
 		println("$(a.name) meets $(b.name) and $(verb)")
 	end
 
+	meets(a::Pet, b::Pet) = "FALLBACK"
 	meets(a::Dog, b::Dog) = "sniffs"
 	meets(a::Dog, b::Cat) = "chases"
 	meets(a::Cat, b::Dog) = "hisses"
@@ -264,11 +260,31 @@ run(`clang++ lib/multidispatch.cpp -o pets`)
 # ╔═╡ 793f5963-fd2c-42e3-bfcd-c02a09834863
 run(`./pets`)
 
-# ╔═╡ b9160db9-ebdf-4c5e-b0f8-54035c125ca0
+# ╔═╡ 0f0175f9-cd97-45dd-8b55-51e51c887d2f
 md"
-Yeah, there's templates but .... 
-- Destroies code extendbility
+### Benefit of MD
+- Easy to define `new types` where old operations apply
+- Easy to implement `new operations` on old types
 "
+
+# ╔═╡ 8ce8464c-6c11-4f40-af13-67c47fa02f7f
+struct Snake <: Pet
+	name::String
+end
+
+# ╔═╡ 257dea65-07d2-474c-8ddc-de77d68429bd
+begin
+	Nagini = Snake("Nagini")
+	encounter(Nagini, erwin)
+end
+
+# ╔═╡ 3cf23202-59da-4ab1-b601-e08bf3fb437c
+function hears(a::Cat, b::Union{Dog,Snake})
+	println("$(a.name) hears $(b.name) and has a piloerection")
+end
+
+# ╔═╡ 2fbed606-16e0-4bfa-a86b-e76a11b60256
+hears(erwin,Nagini)
 
 # ╔═╡ 7ced479f-0d0e-4b94-834c-b3885ef077a6
 md"""
@@ -363,8 +379,13 @@ md"""
 API for doing real time evolution and imaginary time evolution
 """
 
+# ╔═╡ b0407c15-0e28-4af0-8776-740d42dceb32
+md"""Show following doc: $(@bind show_te_doc CheckBox(default=false))"""
+
 # ╔═╡ 966ec890-a580-4350-9f7b-25ff25bd521a
-@doc time_evolve
+if show_te_doc
+	@doc time_evolve
+end
 
 # ╔═╡ f9213805-dce9-4903-8b7e-922b884bcf2a
 md"""Do Imaginary time evolution: $(@bind do_eval CheckBox(default=false))"""
@@ -459,13 +480,6 @@ md"""
 - Ansers Sandvick's [course page](https://physics.bu.edu/~py502/)
 """
 
-# ╔═╡ b7df2141-2878-494a-882b-b794fd7f9d15
-md"""
-# OMEinsum
-Follow Prof. Ran's lecture, flexible time, live coding
-introduce einsum notation
-"""
-
 # ╔═╡ 92861ca5-ce68-4874-8451-c81b54772826
 md"
 # Information
@@ -485,7 +499,7 @@ md"
 # ╔═╡ 0fd67679-c034-46d8-ac88-51b2eb6b6d91
 md"""
 # Acknowledgements
-We appreciate the help of Jin-Guo Liu, Gui-Xin Liu, Shi-Gang Ou, and Rui-Si Wang during the preparation of this presentation.
+We appreciate the help of Jin-Guo Liu, Gui-Xin Liu, Shi-Gang Ou, Rui-Si Wang, and Zhongyi Ni during the preparation of this presentation.
 """
 
 # ╔═╡ b98c561d-01d9-4ca5-82a4-2d87f19bb494
@@ -517,7 +531,7 @@ md"""
 # ╟─b47de57f-ee37-4a92-b99d-1a3763c31a3f
 # ╟─0a2a79cc-9a37-4f96-b422-1a529d6a689b
 # ╟─3cd5a1aa-5229-43b1-8016-47903a1dae6f
-# ╠═57684dc8-31f9-11ee-2888-770b687183aa
+# ╟─57684dc8-31f9-11ee-2888-770b687183aa
 # ╠═1e84d230-2548-4da7-bc10-1ad2efcf14f4
 # ╟─7a2729c6-261f-498c-a3f7-f6ed0a383e0f
 # ╠═57cc9fed-b719-45e1-8a66-92779275b4ed
@@ -529,7 +543,7 @@ md"""
 # ╟─bec0efb6-1f14-4e22-b01c-bbf992f29b52
 # ╟─5b96435c-3edd-4230-9e77-79db8c8e2c8e
 # ╟─cfaa7ee8-8de8-4933-8396-0350408a14b4
-# ╠═69738959-95a3-46b4-9124-5db1160c1295
+# ╟─69738959-95a3-46b4-9124-5db1160c1295
 # ╠═c7e05c5e-5519-4230-806f-1fc37a1ff9ef
 # ╠═f88c1e2a-13fd-4c29-8d2d-d55cea652944
 # ╠═83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
@@ -539,18 +553,21 @@ md"""
 # ╠═fb854b24-6081-4a68-8ab1-82b7e95a2714
 # ╟─6d248884-18cc-4ee2-a411-924dfe25d5ac
 # ╟─6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
-# ╠═9d050c0c-163e-4337-a470-41bd3b02e4cf
-# ╠═88ac0cea-c370-4505-bb6e-7e132b313b54
+# ╟─9d050c0c-163e-4337-a470-41bd3b02e4cf
 # ╠═5b2e9872-6954-41ef-8047-f8c5cecd88ba
 # ╠═e25c3596-1dae-4e0e-b397-b75e77ef3984
 # ╠═2ec8c38d-8dd4-467e-a086-226cb24cbdad
 # ╠═793f5963-fd2c-42e3-bfcd-c02a09834863
-# ╠═b9160db9-ebdf-4c5e-b0f8-54035c125ca0
+# ╟─0f0175f9-cd97-45dd-8b55-51e51c887d2f
+# ╠═8ce8464c-6c11-4f40-af13-67c47fa02f7f
+# ╠═257dea65-07d2-474c-8ddc-de77d68429bd
+# ╠═3cf23202-59da-4ab1-b601-e08bf3fb437c
+# ╠═2fbed606-16e0-4bfa-a86b-e76a11b60256
 # ╟─7ced479f-0d0e-4b94-834c-b3885ef077a6
 # ╟─dd4ea4a2-9e06-43f7-976b-0c9af661cc8e
 # ╟─356cd762-e438-47c7-97b8-3f08b02048f3
 # ╠═7f8975e7-9558-46c3-8348-0a53148a5c23
-# ╠═ce2a6c63-5fa3-4633-8d23-144f7d8d825e
+# ╟─ce2a6c63-5fa3-4633-8d23-144f7d8d825e
 # ╠═28b9449a-95d2-4864-8cbd-9eb99d5611b0
 # ╠═981da071-b446-4b43-a1b1-9a809179e048
 # ╟─5f6480e0-68ce-4a80-9970-dc6049ab8888
@@ -561,8 +578,9 @@ md"""
 # ╠═d92ca84d-e5a9-40be-bea2-63d4cfae608e
 # ╠═84ff2a7f-4484-4264-916c-4fe64601446e
 # ╟─9cb12308-4748-47ac-af03-6125e4bb01b5
+# ╟─b0407c15-0e28-4af0-8776-740d42dceb32
 # ╠═966ec890-a580-4350-9f7b-25ff25bd521a
-# ╠═f9213805-dce9-4903-8b7e-922b884bcf2a
+# ╟─f9213805-dce9-4903-8b7e-922b884bcf2a
 # ╠═81895e21-ba2a-40b8-a618-0de9cf1aaff8
 # ╟─c6633f9e-898f-4e7b-bc14-04d46a9ad563
 # ╟─a07a06f8-7ed3-4ec0-8a88-af07cccd4def
@@ -573,8 +591,7 @@ md"""
 # ╠═f28b5a97-7ab2-45d7-90e0-2e56f040420a
 # ╟─50394dbd-a65f-4b25-9d57-1debacc16fba
 # ╟─d81aa3cb-c485-4005-8d94-2e3dd6845ef3
-# ╟─b7df2141-2878-494a-882b-b794fd7f9d15
 # ╟─92861ca5-ce68-4874-8451-c81b54772826
 # ╟─0fd67679-c034-46d8-ac88-51b2eb6b6d91
 # ╟─b98c561d-01d9-4ca5-82a4-2d87f19bb494
-# ╠═5d9ebbeb-6c69-470e-a832-83c1b46c10e1
+# ╟─5d9ebbeb-6c69-470e-a832-83c1b46c10e1
