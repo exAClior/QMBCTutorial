@@ -214,9 +214,14 @@ Installation Guide: [ CodingThrust/CodingClub](https://github.com/CodingThrust/C
 md"""
 # How to program in Julia
 ## Grammars: [Tutorial](https://www.youtube.com/watch?v=uiQpwMQZBTA)
-## Paradiam: *Multiple Dispatch*
--  Multiple dispatch is a programming paradigm "in which a function or method can be dynamically dispatched based on the run-time (dynamic) type of more than one of its arguments."
-- "Single-dispatch polymorphism where a function or method call is dynamically dispatched based on the derived type of the object on which the method has been called."
+- Almost Python like
+- Index starts from 1
+- Column Major
+
+## *Multiple Dispatch*
+- Programming Paradigm
+- Expressiveness
+- Contrasted with Single Dispatch Polymorphism
 """
 
 # ╔═╡ 5b2e9872-6954-41ef-8047-f8c5cecd88ba
@@ -298,15 +303,25 @@ md"""
 """
 
 # ╔═╡ 356cd762-e438-47c7-97b8-3f08b02048f3
-md"
-### Yao
-- [Yao.jl](https://github.com/QuantumBFS/Yao.jl) is an Extensible, Efficient Quantum Algorithm Design library For Humans written and maintained by Xiuzhe (Roger) Luo and Jin-Guo Liu
-- [arXiv:1912.10877](https://arxiv.org/abs/1912.10877)
+html"""
+<h3>Yao</h3>
 
-![Roger Luo](https://pbs.twimg.com/profile_images/1136498887961849856/i2-m_GLr_400x400.jpg)
-![Jin-Guo Liu](https://avatars.githubusercontent.com/u/6257240?v=4)
-- Construction of Hamiltonian as Sparse Matrices
-"
+<url>
+<li>
+<a href="https://github.com/QuantumBFS/Yao.jl">Yao</a> is an Extensible, Efficient Quantum Algorithm Design library For Humans written and maintained by Xiuzhe (Roger) Luo and Jin-Guo Liu
+</li>
+<li>
+<a href="https://arxiv.org/abs/1912.10877">arXiv:1912.10877</a>
+</li>
+<li>
+<img src="https://pbs.twimg.com/profile_images/1136498887961849856/i2-m_GLr_400x400.jpg" width=100/>
+<img src="https://avatars.githubusercontent.com/u/6257240?v=4" width=100/>
+</li>
+<li>
+Construction of Hamiltonian as Sparse Matrices
+</li>
+</ul>
+"""
 
 # ╔═╡ 7f8975e7-9558-46c3-8348-0a53148a5c23
 function make_XXZhamiltonian(L::Int, J::Real, Jz::Real; periodic::Bool=false)
@@ -367,8 +382,13 @@ md"
 - It is a Julia package collecting a number of Krylov-based algorithms for linear problems, singular value and eigenvalue problems and the application of functions of linear maps or operators to vectors.
 "
 
+# ╔═╡ d1f39d72-702f-444c-9e9c-c6b8b0519707
+md"""Show following doc: $(@bind show_te_doc1 CheckBox(default=false))"""
+
 # ╔═╡ d92ca84d-e5a9-40be-bea2-63d4cfae608e
-#@doc eigsolve
+if show_te_doc1
+	@doc eigsolve
+end
 
 # ╔═╡ 84ff2a7f-4484-4264-916c-4fe64601446e
 eval_eds, vecs_ed, info_ed =  eigsolve(mat(ham), 3, :SR,ishermitian=true)
@@ -516,6 +536,8 @@ References
 "
 
 # ╔═╡ 5d9ebbeb-6c69-470e-a832-83c1b46c10e1
+# ╠═╡ disabled = true
+#=╠═╡
 md"""
 # My sleves
 ## Why not Python with Numba, Cython or PyPy?
@@ -523,6 +545,7 @@ md"""
 - synergy between packages not well i.e numba and pandas
 - [Stefan's take on Python vs Julia](https://discourse.julialang.org/t/julia-motivation-why-werent-numpy-scipy-numba-good-enough/2236/10)
 """
+  ╠═╡ =#
 
 # ╔═╡ Cell order:
 # ╟─0aae83c1-d0e7-435e-8446-164a2bdc9696
@@ -575,6 +598,7 @@ md"""
 # ╠═72a9962e-ecbe-4225-b5c5-7b5d2017ca7d
 # ╠═14fd1a93-6123-4a28-833c-5ca20c3efb79
 # ╟─026887ca-4ed2-4192-a730-8f0fcd934d07
+# ╟─d1f39d72-702f-444c-9e9c-c6b8b0519707
 # ╠═d92ca84d-e5a9-40be-bea2-63d4cfae608e
 # ╠═84ff2a7f-4484-4264-916c-4fe64601446e
 # ╟─9cb12308-4748-47ac-af03-6125e4bb01b5
