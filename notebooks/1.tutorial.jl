@@ -336,15 +336,15 @@ md"# Demo"
 
 # ╔═╡ 26f9460b-6ddb-4984-a8f4-20d9fe1da63b
 begin
-	struct Point{N, T<:Real}
+	struct MyPoint{N, T<:Real}
 		coo::NTuple{N, T}
 	end
-	Point(args::Real...) = Point((args...,))
+	MyPoint(args::Real...) = MyPoint((args...,))
 end
 
 # ╔═╡ f579931f-eefc-4542-9a59-8964c30549bc
-function Base.:-(p1::Point{N, T}, p2::Point{N,T}) where {N,T}
-	Point(p1.coo .- p2.coo)
+function Base.:-(p1::MyPoint{N, T}, p2::MyPoint{N,T}) where {N,T}
+	MyPoint(p1.coo .- p2.coo)
 end
 
 # ╔═╡ 5b96435c-3edd-4230-9e77-79db8c8e2c8e
@@ -369,25 +369,22 @@ end 200 200
 @btime sqrt(sum(abs2, (2.0, 3.0, 4.0, 5.5) .- (1.0, 3.0, 5.0, 3.0)))
 
 # ╔═╡ 17804c1f-76e9-4c0c-8ea3-41cf0f3af1c2
-p1 = Point(2.0, 3.0)
+p1 = MyPoint(2.0, 3.0)
 
 # ╔═╡ c6c9e9f4-d5a7-473a-9e2b-8ecaf59875c9
-p2 = Point(3.0, 4.0)
+p2 = MyPoint(3.0, 4.0)
 
 # ╔═╡ 7610f980-000f-4649-81fb-4f0bc0cbe5b9
 @btime p1 - p2
 
 # ╔═╡ d41bf372-e384-44bb-ab90-5c54e720c8e9
-p3 = Point(3.0, 4.0, 5.0)
+p3 = MyPoint(3.0, 4.0, 5.0)
 
 # ╔═╡ 31a0d920-2e28-4208-b23b-9cc10d48998b
-p4 = Point(3.0, 4.0, 6.0)
+p4 = MyPoint(3.0, 4.0, 6.0)
 
 # ╔═╡ 37bb59dc-40fe-4003-961a-e484096a419f
 p4 - p3
-
-# ╔═╡ aac44713-2c3e-48db-841f-956c4ce1413c
-
 
 # ╔═╡ 7ced479f-0d0e-4b94-834c-b3885ef077a6
 md"""
@@ -611,7 +608,13 @@ md"
 # ╔═╡ 0fd67679-c034-46d8-ac88-51b2eb6b6d91
 md"""
 # Acknowledgements
-We appreciate the help of Jin-Guo Liu, Gui-Xin Liu, Shi-Gang Ou, Rui-Si Wang, and Zhongyi Ni during the preparation of this presentation.
+We appreciate the help of Gui-Xin Liu, Shi-Gang Ou, Rui-Si Wang, and Zhongyi Ni during the preparation of this presentation.
+"""
+
+# ╔═╡ ee441f04-2f30-4479-8bba-751dcdb0dcf1
+md"""
+# Where to find us
+You can find Yusheng at his [Github page](https://github.com/exaclior). You can find Jin-Guo at his [Github page](https://github.com/giggleliu).
 """
 
 # ╔═╡ b98c561d-01d9-4ca5-82a4-2d87f19bb494
@@ -627,23 +630,11 @@ References
 - [The ITensor Software Library for Tensor Network Calculations](https://arxiv.org/abs/2007.14822)
 "
 
-# ╔═╡ 5d9ebbeb-6c69-470e-a832-83c1b46c10e1
-# ╠═╡ disabled = true
-#=╠═╡
-md"""
-# My sleves
-## Why not Python with Numba, Cython or PyPy?
-- Numba specializes on numerical computation, what if you want to operate on strings?
-- synergy between packages not well i.e numba and pandas
-- [Stefan's take on Python vs Julia](https://discourse.julialang.org/t/julia-motivation-why-werent-numpy-scipy-numba-good-enough/2236/10)
-"""
-  ╠═╡ =#
-
 # ╔═╡ Cell order:
-# ╠═0aae83c1-d0e7-435e-8446-164a2bdc9696
+# ╟─0aae83c1-d0e7-435e-8446-164a2bdc9696
 # ╟─9f9230a7-6900-42b3-a3c6-df303c9d9f39
 # ╟─0d49dbcd-b3d2-4965-b0b7-1de58f72025e
-# ╟─b47de57f-ee37-4a92-b99d-1a3763c31a3f
+# ╠═b47de57f-ee37-4a92-b99d-1a3763c31a3f
 # ╟─0a2a79cc-9a37-4f96-b422-1a529d6a689b
 # ╟─e1a5a58b-733d-49d0-b851-e36310e09b37
 # ╟─580cb330-6ddf-4297-88f6-881a65247427
@@ -711,7 +702,6 @@ md"""
 # ╠═d41bf372-e384-44bb-ab90-5c54e720c8e9
 # ╠═31a0d920-2e28-4208-b23b-9cc10d48998b
 # ╠═37bb59dc-40fe-4003-961a-e484096a419f
-# ╠═aac44713-2c3e-48db-841f-956c4ce1413c
 # ╟─7ced479f-0d0e-4b94-834c-b3885ef077a6
 # ╟─dd4ea4a2-9e06-43f7-976b-0c9af661cc8e
 # ╟─356cd762-e438-47c7-97b8-3f08b02048f3
@@ -742,5 +732,5 @@ md"""
 # ╟─50394dbd-a65f-4b25-9d57-1debacc16fba
 # ╟─92861ca5-ce68-4874-8451-c81b54772826
 # ╟─0fd67679-c034-46d8-ac88-51b2eb6b6d91
+# ╟─ee441f04-2f30-4479-8bba-751dcdb0dcf1
 # ╟─b98c561d-01d9-4ca5-82a4-2d87f19bb494
-# ╟─5d9ebbeb-6c69-470e-a832-83c1b46c10e1
