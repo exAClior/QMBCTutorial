@@ -18,7 +18,7 @@ end
 begin
 	using Pkg
 	Pkg.activate(".");
-	Pkg.build("PyCall");
+	#Pkg.build("PyCall");
 end
 
 # ╔═╡ 9f9230a7-6900-42b3-a3c6-df303c9d9f39
@@ -68,12 +68,43 @@ html"""
 			A Starter Kit
 		</p>
 		<p style="font-size: 30px; font-variant: small-caps; margin: 0px">
-			Yusheng Zhao
+			Yusheng Zhao, Jinguo Liu
 		</p>
 		<p style="font-size: 20px;">
 			MinJiang University, Fu Zhou, 08/17/2023
 		</p>
 	</div>
+"""
+
+# ╔═╡ e1a5a58b-733d-49d0-b851-e36310e09b37
+md"""
+# Promised: Road to mastering machine learning
+This lecture is supposed to be delivered by Lei. He wanted to lecture about machine learning. If you are interesting in learning machine learning for physicists, please check the following repo and books.
+## Machine learning for physicists
+Github: [wangleiphy/ml4p](https://github.com/wangleiphy/ml4p)
+"""
+
+# ╔═╡ 580cb330-6ddf-4297-88f6-881a65247427
+md"""![](https://user-images.githubusercontent.com/6257240/260753478-f4960c86-65f0-4d71-a264-1a7f47b0b3b7.png)
+"""
+
+# ╔═╡ 8d83e226-16ec-415f-9b12-b63974058ae8
+md"## The book that I enjoyed reading"
+
+# ╔═╡ f8cc0dca-2e41-4361-b750-281f1e223dde
+html"""
+<img src="https://user-images.githubusercontent.com/6257240/260753742-e1146b86-7876-4f80-93cd-7242aa518815.png" width=300>
+"""
+
+# ╔═╡ 619a5dc2-5d0d-405f-a7d6-fd0e8160b65a
+md"## Online lecture: CS231n"
+
+# ╔═╡ ebad386c-4630-4f6a-94eb-548b14cd9807
+md"Youtube Video"
+
+# ╔═╡ 61c24322-d7bc-4e0d-9868-ee5ad07399bb
+html"""
+<iframe width="560" height="315" src="https://www.youtube.com/embed/vT1JzLTH4G4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 """
 
 # ╔═╡ 3cd5a1aa-5229-43b1-8016-47903a1dae6f
@@ -83,15 +114,21 @@ md"""
 ![Feynman Quote](https://qph.cf2.quoracdn.net/main-qimg-87833c78a604ff07a82ff7787574e197.webp)
 ## What language to use?
 ![A Few Criterions](https://pbs.twimg.com/media/F3IROZ6WsAA_74B?format=jpg&name=medium)
-## (My) Answer
-![Answer](https://i.imgflip.com/7vlf1x.jpg)
+"""
+
+# ╔═╡ d81aa3cb-c485-4005-8d94-2e3dd6845ef3
+md"""
+## Anders Sandvik's (Creater of Stochastic Series Expansion Monte Carlo method) Answer
+- Anders Sandvik's [course page](https://physics.bu.edu/~py502/)
 """
 
 # ╔═╡ 57684dc8-31f9-11ee-2888-770b687183aa
 md"""
 # Why Julia?
 ## Short Answer
-Julia allows creation of **high performance** scientific computation code with **ease**!
+* **Speed** 
+* **Easy to use**
+* **Reproducibility**
 
 ## What is Julia?
 Julia is an **unconventional dynamic** programming language with the goal of being **easy to be made fast**.
@@ -102,7 +139,7 @@ Julia is an **unconventional dynamic** programming language with the goal of bei
 """
 
 # ╔═╡ 1e84d230-2548-4da7-bc10-1ad2efcf14f4
-function sumtil(n::Int)
+function sumtil(n)
 	x = 0
 	for i in 1:n
 		x += i
@@ -145,24 +182,6 @@ md"
 - Slowness of a *typical* Dynamic language is related to cache miss.
 "
 
-# ╔═╡ 5b96435c-3edd-4230-9e77-79db8c8e2c8e
-@drawsvg begin
-	x0 = -50
-	background("white")
-	for i=1:4
-		y0 = 40 * i - 100
-		box(Point(x0, y0), 50, 40; action=:stroke)
-		box(Point(x0+50, y0), 50, 40; action=:stroke)
-		setcolor("#88CC66")
-		circle(Point(x0+120, y0), 15; action=:fill)
-		setcolor("black")
-		Luxor.text("type", Point(x0, y0); halign=:center, valign=:center)
-		Luxor.text("*data", Point(x0+50, y0); halign=:center, valign=:middle)
-		Luxor.text("data", Point(x0+120, y0); halign=:center, valign=:middle)
-		Luxor.arrow(Point(x0+50, y0-10), Point(x0+70, y0-30), Point(x0+90, y0-30), Point(x0+110, y0-10), :stroke)
-	end
-end 200 200
-
 # ╔═╡ 69738959-95a3-46b4-9124-5db1160c1295
 md"""
 #### Julia is different!
@@ -174,10 +193,17 @@ md"""
 @code_typed 1.0 + 2.0
 
 # ╔═╡ f88c1e2a-13fd-4c29-8d2d-d55cea652944
-@code_typed 1 + 2
+@code_typed 1 + 2.0
 
 # ╔═╡ 83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
-@code_native 1.0 + 2.0
+with_terminal() do
+	@code_native 1.0 + 2.0
+end
+
+# ╔═╡ c41c8ca1-ddb9-491c-8250-faa766f6fce1
+with_terminal() do
+	@code_typed sumtil(2)
+end
 
 # ╔═╡ 0d451173-703c-4a6b-aae7-e6df6d41a0e1
 run(`gcc -S lib/add.c`);
@@ -186,23 +212,6 @@ run(`gcc -S lib/add.c`);
 with_terminal() do
 	run(`cat lib/add.s`)
 end
-
-# ╔═╡ db3bb766-e707-45b3-a7a6-e9f0ef9a7e80
-md"
-## Icing on the cake
-- Julia supports unicode 
-"
-
-# ╔═╡ fb854b24-6081-4a68-8ab1-82b7e95a2714
-begin
-	println("Ain't nobody likes to read lambda gamma pi, show me the unicode λ, γ, π.")
-end
-
-# ╔═╡ 6d248884-18cc-4ee2-a411-924dfe25d5ac
-md"
-- Mature tool-chain
-- Easy environment management
-"
 
 # ╔═╡ 6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 md"
@@ -214,9 +223,9 @@ Installation Guide: [ CodingThrust/CodingClub](https://github.com/CodingThrust/C
 md"""
 # How to program in Julia
 ## Grammars: [Tutorial](https://www.youtube.com/watch?v=uiQpwMQZBTA)
-- Almost Python like
-- Index starts from 1
-- Column Major
+- Almost Python like, but
+    - Index starts from 1
+    - Column Major
 
 ## *Multiple Dispatch*
 - Programming Paradigm
@@ -224,43 +233,74 @@ md"""
 - Contrasted with Single Dispatch Polymorphism
 """
 
-# ╔═╡ 5b2e9872-6954-41ef-8047-f8c5cecd88ba
-begin
-	abstract type Pet end
-	struct Dog <: Pet
+# ╔═╡ 34880c43-25d3-444b-9f83-297fe6d8ed2e
+
+
+# ╔═╡ e0ae8990-8fb0-4908-b6b9-055ea76685e6
+abstract type Pet end
+
+# ╔═╡ f7285edd-8518-499a-8f2d-6a2b2009e0c1
+struct Dog <: Pet
 		name::String 
 	end
-	struct Cat <: Pet
+
+# ╔═╡ 58d3d1d0-2567-4a6b-b934-1e2b2151cfdd
+struct Cat <: Pet
 		name::String 
 	end
-	function encounter(a::Pet, b::Pet)
+
+# ╔═╡ 7b17bef3-de70-4917-8d0c-44b712346ff4
+meets(a::Pet, b::Pet) = "FALLBACK"
+
+# ╔═╡ 7c31963c-1f39-4756-9b09-aeda6c8e7079
+meets(a::Dog, b::Dog) = "sniffs"
+
+# ╔═╡ c1bb914b-60dd-4248-a76e-40ea2f96b4ab
+meets(a::Dog, b::Cat) = "chases"
+
+# ╔═╡ bfa038ae-7916-4516-87e2-b5b0e416f10f
+meets(a::Cat, b::Dog) = "hisses"
+
+# ╔═╡ 99b6b4e4-33f7-4b37-bc9d-073096bc0e50
+meets(a::Cat, b::Cat) = "slinks"
+
+# ╔═╡ 8f182daf-2257-4948-9a68-1b415b2c3992
+function encounter(a::Pet, b::Pet)
 		verb = meets(a,b)
 		println("$(a.name) meets $(b.name) and $(verb)")
 	end
 
-	meets(a::Pet, b::Pet) = "FALLBACK"
-	meets(a::Dog, b::Dog) = "sniffs"
-	meets(a::Dog, b::Cat) = "chases"
-	meets(a::Cat, b::Dog) = "hisses"
-	meets(a::Cat, b::Cat) = "slinks"
-end
+# ╔═╡ 8bb17242-8593-4a5d-a16d-edb4e0be165e
+sam = Dog("Sam");
 
-# ╔═╡ e25c3596-1dae-4e0e-b397-b75e77ef3984
-begin
-	sam = Dog("Sam");
-	bob = Dog("Bob");
-	erwin = Cat("Erwin");
-	tom = Cat("Tom");
+# ╔═╡ 5e55f52f-b2e1-4ef6-b8c3-3965e515dfe0
+bob = Dog("Bob");
 
-	encounter(sam, bob)
-	encounter(sam, erwin)
-	encounter(erwin, bob)
-	encounter(erwin, tom)
+# ╔═╡ 2e1ae33e-3d35-49c2-83d0-5f0c735f8953
+erwin = Cat("Erwin");
 
-end
+# ╔═╡ 5d2e1ebd-e91e-4815-8015-da8e3a529ed3
+tom = Cat("Tom");
+
+# ╔═╡ dda093a1-c67b-45a3-b689-c19267bc999e
+encounter(sam, bob)
+
+# ╔═╡ b0211527-b726-43a9-9106-72671737f4f2
+encounter(sam, erwin)
+
+# ╔═╡ 5c8ecd56-3a81-4a84-8ab0-a8d165677b46
+encounter(erwin, bob)
+
+# ╔═╡ 32f709aa-7f10-43a3-a9d3-da6d9d929f35
+encounter(erwin, tom)
 
 # ╔═╡ 2ec8c38d-8dd4-467e-a086-226cb24cbdad
-run(`clang++ lib/multidispatch.cpp -o pets`)
+run(`g++ lib/multidispatch.cpp -o pets`)
+
+# ╔═╡ 6ebd4529-b5b6-4fd3-939f-49fdefa32800
+with_terminal() do
+	run(`cat lib/multidispatch.cpp`)
+end
 
 # ╔═╡ 793f5963-fd2c-42e3-bfcd-c02a09834863
 run(`./pets`)
@@ -290,6 +330,64 @@ end
 
 # ╔═╡ 2fbed606-16e0-4bfa-a86b-e76a11b60256
 hears(erwin,Nagini)
+
+# ╔═╡ 8189b0a2-c251-4705-a8b0-ef069e5c8b88
+md"# Demo"
+
+# ╔═╡ 26f9460b-6ddb-4984-a8f4-20d9fe1da63b
+begin
+	struct Point{N, T<:Real}
+		coo::NTuple{N, T}
+	end
+	Point(args::Real...) = Point((args...,))
+end
+
+# ╔═╡ f579931f-eefc-4542-9a59-8964c30549bc
+function Base.:-(p1::Point{N, T}, p2::Point{N,T}) where {N,T}
+	Point(p1.coo .- p2.coo)
+end
+
+# ╔═╡ 5b96435c-3edd-4230-9e77-79db8c8e2c8e
+@drawsvg begin
+	x0 = -50
+	background("white")
+	for i=1:4
+		y0 = 40 * i - 100
+		box(Point(x0, y0), 50, 40; action=:stroke)
+		box(Point(x0+50, y0), 50, 40; action=:stroke)
+		setcolor("#88CC66")
+		circle(Point(x0+120, y0), 15; action=:fill)
+		setcolor("black")
+		Luxor.text("type", Point(x0, y0); halign=:center, valign=:center)
+		Luxor.text("*data", Point(x0+50, y0); halign=:center, valign=:middle)
+		Luxor.text("data", Point(x0+120, y0); halign=:center, valign=:middle)
+		Luxor.arrow(Point(x0+50, y0-10), Point(x0+70, y0-30), Point(x0+90, y0-30), Point(x0+110, y0-10), :stroke)
+	end
+end 200 200
+
+# ╔═╡ e7c6e74a-4fc6-49fe-adad-537341043abb
+@btime sqrt(sum(abs2, (2.0, 3.0, 4.0, 5.5) .- (1.0, 3.0, 5.0, 3.0)))
+
+# ╔═╡ 17804c1f-76e9-4c0c-8ea3-41cf0f3af1c2
+p1 = Point(2.0, 3.0)
+
+# ╔═╡ c6c9e9f4-d5a7-473a-9e2b-8ecaf59875c9
+p2 = Point(3.0, 4.0)
+
+# ╔═╡ 7610f980-000f-4649-81fb-4f0bc0cbe5b9
+@btime p1 - p2
+
+# ╔═╡ d41bf372-e384-44bb-ab90-5c54e720c8e9
+p3 = Point(3.0, 4.0, 5.0)
+
+# ╔═╡ 31a0d920-2e28-4208-b23b-9cc10d48998b
+p4 = Point(3.0, 4.0, 6.0)
+
+# ╔═╡ 37bb59dc-40fe-4003-961a-e484096a419f
+p4 - p3
+
+# ╔═╡ aac44713-2c3e-48db-841f-956c4ce1413c
+
 
 # ╔═╡ 7ced479f-0d0e-4b94-834c-b3885ef077a6
 md"""
@@ -494,12 +592,6 @@ Markdown.MD(
     ),
 )
 
-# ╔═╡ d81aa3cb-c485-4005-8d94-2e3dd6845ef3
-md"""
-## Monte Carlo
-- Ansers Sandvick's [course page](https://physics.bu.edu/~py502/)
-"""
-
 # ╔═╡ 92861ca5-ce68-4874-8451-c81b54772826
 md"
 # Information
@@ -548,12 +640,20 @@ md"""
   ╠═╡ =#
 
 # ╔═╡ Cell order:
-# ╟─0aae83c1-d0e7-435e-8446-164a2bdc9696
+# ╠═0aae83c1-d0e7-435e-8446-164a2bdc9696
 # ╟─9f9230a7-6900-42b3-a3c6-df303c9d9f39
 # ╟─0d49dbcd-b3d2-4965-b0b7-1de58f72025e
 # ╟─b47de57f-ee37-4a92-b99d-1a3763c31a3f
 # ╟─0a2a79cc-9a37-4f96-b422-1a529d6a689b
+# ╟─e1a5a58b-733d-49d0-b851-e36310e09b37
+# ╟─580cb330-6ddf-4297-88f6-881a65247427
+# ╟─8d83e226-16ec-415f-9b12-b63974058ae8
+# ╟─f8cc0dca-2e41-4361-b750-281f1e223dde
+# ╟─619a5dc2-5d0d-405f-a7d6-fd0e8160b65a
+# ╟─ebad386c-4630-4f6a-94eb-548b14cd9807
+# ╟─61c24322-d7bc-4e0d-9868-ee5ad07399bb
 # ╟─3cd5a1aa-5229-43b1-8016-47903a1dae6f
+# ╟─d81aa3cb-c485-4005-8d94-2e3dd6845ef3
 # ╟─57684dc8-31f9-11ee-2888-770b687183aa
 # ╠═1e84d230-2548-4da7-bc10-1ad2efcf14f4
 # ╟─7a2729c6-261f-498c-a3f7-f6ed0a383e0f
@@ -570,22 +670,48 @@ md"""
 # ╠═c7e05c5e-5519-4230-806f-1fc37a1ff9ef
 # ╠═f88c1e2a-13fd-4c29-8d2d-d55cea652944
 # ╠═83c84e7a-7a43-4db9-876d-c3edf9ec2ab8
+# ╠═c41c8ca1-ddb9-491c-8250-faa766f6fce1
 # ╠═0d451173-703c-4a6b-aae7-e6df6d41a0e1
 # ╠═50a44767-617f-4c57-92f1-96391dee77e6
-# ╟─db3bb766-e707-45b3-a7a6-e9f0ef9a7e80
-# ╠═fb854b24-6081-4a68-8ab1-82b7e95a2714
-# ╟─6d248884-18cc-4ee2-a411-924dfe25d5ac
 # ╟─6a3e89fe-2a59-4ba8-ba8f-40a7062f7baa
 # ╟─9d050c0c-163e-4337-a470-41bd3b02e4cf
-# ╠═5b2e9872-6954-41ef-8047-f8c5cecd88ba
-# ╠═e25c3596-1dae-4e0e-b397-b75e77ef3984
+# ╠═34880c43-25d3-444b-9f83-297fe6d8ed2e
+# ╠═e0ae8990-8fb0-4908-b6b9-055ea76685e6
+# ╠═f7285edd-8518-499a-8f2d-6a2b2009e0c1
+# ╠═58d3d1d0-2567-4a6b-b934-1e2b2151cfdd
+# ╠═8f182daf-2257-4948-9a68-1b415b2c3992
+# ╠═7b17bef3-de70-4917-8d0c-44b712346ff4
+# ╠═7c31963c-1f39-4756-9b09-aeda6c8e7079
+# ╠═c1bb914b-60dd-4248-a76e-40ea2f96b4ab
+# ╠═bfa038ae-7916-4516-87e2-b5b0e416f10f
+# ╠═99b6b4e4-33f7-4b37-bc9d-073096bc0e50
+# ╠═8bb17242-8593-4a5d-a16d-edb4e0be165e
+# ╠═5e55f52f-b2e1-4ef6-b8c3-3965e515dfe0
+# ╠═2e1ae33e-3d35-49c2-83d0-5f0c735f8953
+# ╠═5d2e1ebd-e91e-4815-8015-da8e3a529ed3
+# ╠═dda093a1-c67b-45a3-b689-c19267bc999e
+# ╠═b0211527-b726-43a9-9106-72671737f4f2
+# ╠═5c8ecd56-3a81-4a84-8ab0-a8d165677b46
+# ╠═32f709aa-7f10-43a3-a9d3-da6d9d929f35
 # ╠═2ec8c38d-8dd4-467e-a086-226cb24cbdad
+# ╠═6ebd4529-b5b6-4fd3-939f-49fdefa32800
 # ╠═793f5963-fd2c-42e3-bfcd-c02a09834863
 # ╟─0f0175f9-cd97-45dd-8b55-51e51c887d2f
 # ╠═8ce8464c-6c11-4f40-af13-67c47fa02f7f
 # ╠═257dea65-07d2-474c-8ddc-de77d68429bd
 # ╠═3cf23202-59da-4ab1-b601-e08bf3fb437c
 # ╠═2fbed606-16e0-4bfa-a86b-e76a11b60256
+# ╠═e7c6e74a-4fc6-49fe-adad-537341043abb
+# ╟─8189b0a2-c251-4705-a8b0-ef069e5c8b88
+# ╠═26f9460b-6ddb-4984-a8f4-20d9fe1da63b
+# ╠═f579931f-eefc-4542-9a59-8964c30549bc
+# ╠═17804c1f-76e9-4c0c-8ea3-41cf0f3af1c2
+# ╠═c6c9e9f4-d5a7-473a-9e2b-8ecaf59875c9
+# ╠═7610f980-000f-4649-81fb-4f0bc0cbe5b9
+# ╠═d41bf372-e384-44bb-ab90-5c54e720c8e9
+# ╠═31a0d920-2e28-4208-b23b-9cc10d48998b
+# ╠═37bb59dc-40fe-4003-961a-e484096a419f
+# ╠═aac44713-2c3e-48db-841f-956c4ce1413c
 # ╟─7ced479f-0d0e-4b94-834c-b3885ef077a6
 # ╟─dd4ea4a2-9e06-43f7-976b-0c9af661cc8e
 # ╟─356cd762-e438-47c7-97b8-3f08b02048f3
@@ -614,7 +740,6 @@ md"""
 # ╠═25528a3b-21d8-412f-b4b3-7fe216fa61c7
 # ╠═f28b5a97-7ab2-45d7-90e0-2e56f040420a
 # ╟─50394dbd-a65f-4b25-9d57-1debacc16fba
-# ╟─d81aa3cb-c485-4005-8d94-2e3dd6845ef3
 # ╟─92861ca5-ce68-4874-8451-c81b54772826
 # ╟─0fd67679-c034-46d8-ac88-51b2eb6b6d91
 # ╟─b98c561d-01d9-4ca5-82a4-2d87f19bb494

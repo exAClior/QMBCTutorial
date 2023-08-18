@@ -1,8 +1,8 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.9.2"
+julia_version = "1.10.0-beta1"
 manifest_format = "2.0"
-project_hash = "edb4f7010cbac300b533a2427583cd84f030d709"
+project_hash = "47fb1ed3af83af0e245b6aca6891737cb6b3ac93"
 
 [[deps.AbstractPlutoDingetjes]]
 deps = ["Pkg"]
@@ -491,10 +491,16 @@ uuid = "42e2da0e-8278-4e71-bc24-59509adca0fe"
 version = "1.0.2"
 
 [[deps.HDF5]]
-deps = ["Compat", "HDF5_jll", "Libdl", "Mmap", "Random", "Requires", "UUIDs"]
-git-tree-sha1 = "c73fdc3d9da7700691848b78c61841274076932a"
+deps = ["Compat", "HDF5_jll", "Libdl", "MPIPreferences", "Mmap", "Preferences", "Printf", "Random", "Requires", "UUIDs"]
+path = "/home/leo/.julia/dev/HDF5"
 uuid = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
-version = "0.16.15"
+version = "0.17.0"
+
+    [deps.HDF5.extensions]
+    MPIExt = "MPI"
+
+    [deps.HDF5.weakdeps]
+    MPI = "da04e1cc-30fd-572f-bb4f-1f8673147195"
 
 [[deps.HDF5_jll]]
 deps = ["Artifacts", "JLLWrappers", "LibCURL_jll", "Libdl", "OpenSSL_jll", "Pkg", "Zlib_jll"]
@@ -509,9 +515,9 @@ uuid = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 version = "1.9.14"
 
 [[deps.HalfIntegers]]
-git-tree-sha1 = "d654a64bf8861db5fd95204a4955f0f28e791c62"
+git-tree-sha1 = "1cfb497b72e1e8ab2256334dee1aaad43fa279ad"
 uuid = "f0d1745a-41c9-11e9-1dd9-e5d34d218721"
-version = "1.5.0"
+version = "1.5.1"
 
 [[deps.HarfBuzz_jll]]
 deps = ["Artifacts", "Cairo_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "Graphite2_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg"]
@@ -539,7 +545,7 @@ version = "0.2.3"
 
 [[deps.ITensors]]
 deps = ["Adapt", "BitIntegers", "ChainRulesCore", "Compat", "Dictionaries", "DocStringExtensions", "Functors", "HDF5", "IsApprox", "KrylovKit", "LinearAlgebra", "LinearMaps", "NDTensors", "PackageCompiler", "Pkg", "Printf", "Random", "Requires", "SerializedElementArrays", "SimpleTraits", "StaticArrays", "Strided", "TimerOutputs", "TupleTools", "Zeros", "ZygoteRules"]
-git-tree-sha1 = "8d4804bb6a9bcc13dd4297adaae2784d25a10c63"
+path = "/home/leo/.julia/dev/ITensors"
 uuid = "9136182c-28ba-11e9-034c-db9fb085ebd5"
 version = "0.3.41"
 
@@ -591,10 +597,10 @@ uuid = "1019f520-868f-41f5-a6de-eb00f4b6a39c"
 version = "0.1.5"
 
 [[deps.JLLWrappers]]
-deps = ["Preferences"]
-git-tree-sha1 = "abc9885a7ca2052a736a600f7fa66209f96506e1"
+deps = ["Artifacts", "Preferences"]
+git-tree-sha1 = "a7e91ef94114d5bc8952bcaa8d6ff952cf709808"
 uuid = "692b3bcd-3c85-4b1f-b108-f13ce0eb3210"
-version = "1.4.1"
+version = "1.4.2"
 
 [[deps.JSON]]
 deps = ["Dates", "Mmap", "Parsers", "Unicode"]
@@ -668,20 +674,16 @@ version = "1.3.0"
 
 [[deps.Latexify]]
 deps = ["Formatting", "InteractiveUtils", "LaTeXStrings", "MacroTools", "Markdown", "OrderedCollections", "Printf", "Requires"]
-git-tree-sha1 = "8c57307b5d9bb3be1ff2da469063628631d4d51e"
+git-tree-sha1 = "f428ae552340899a935973270b8d98e5a31c49fe"
 uuid = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
-version = "0.15.21"
+version = "0.16.1"
 
     [deps.Latexify.extensions]
     DataFramesExt = "DataFrames"
-    DiffEqBiologicalExt = "DiffEqBiological"
-    ParameterizedFunctionsExt = "DiffEqBase"
     SymEngineExt = "SymEngine"
 
     [deps.Latexify.weakdeps]
     DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
-    DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"
-    DiffEqBiological = "eb300fae-53e8-50a0-950c-e21f52c2b7e0"
     SymEngine = "123dc426-2d89-5057-bbad-38513e3affd8"
 
 [[deps.LazyArtifacts]]
@@ -697,12 +699,12 @@ version = "0.3.0"
 [[deps.LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]
 uuid = "b27032c2-a3e7-50c8-80cd-2d36dbcbfd21"
-version = "0.6.3"
+version = "0.6.4"
 
 [[deps.LibCURL_jll]]
 deps = ["Artifacts", "LibSSH2_jll", "Libdl", "MbedTLS_jll", "Zlib_jll", "nghttp2_jll"]
 uuid = "deac9b47-8bc7-5906-a0fe-35ac56dc84c0"
-version = "7.84.0+0"
+version = "8.0.1+0"
 
 [[deps.LibGit2]]
 deps = ["Base64", "NetworkOptions", "Printf", "SHA"]
@@ -839,6 +841,12 @@ git-tree-sha1 = "bc38dff0548128765760c79eb7388a4b37fae2c8"
 uuid = "d8e11817-5142-5d16-987a-aa16d5891078"
 version = "0.4.17"
 
+[[deps.MPIPreferences]]
+deps = ["Libdl", "Preferences"]
+git-tree-sha1 = "781916a2ebf2841467cda03b6f1af43e23839d85"
+uuid = "3da0fdf6-3ccc-4f1b-acd9-58baa6c99267"
+version = "0.1.9"
+
 [[deps.MPSKit]]
 deps = ["FLoops", "FastClosures", "FoldsThreads", "KrylovKit", "LinearAlgebra", "OptimKit", "RecipesBase", "TensorKit", "TensorKitManifolds", "TensorOperations", "Transducers", "VectorInterface"]
 git-tree-sha1 = "42afc59559e4f8ab9718a77da6bb05f6e64db911"
@@ -897,11 +905,11 @@ uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
 [[deps.MozillaCACerts_jll]]
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
-version = "2022.10.11"
+version = "2023.1.10"
 
 [[deps.NDTensors]]
 deps = ["Adapt", "Compat", "Dictionaries", "FLoops", "Folds", "Functors", "HDF5", "LinearAlgebra", "Random", "Requires", "SimpleTraits", "SplitApplyCombine", "StaticArrays", "Strided", "TimerOutputs", "TupleTools"]
-git-tree-sha1 = "669f9e6d71ecce7fc80e0becbcd628c6efde1fac"
+path = "/home/leo/.julia/dev/ITensors/NDTensors"
 uuid = "23ae76d9-e61a-49c4-8f12-3f1a16adf9cf"
 version = "0.2.10"
 
@@ -942,7 +950,7 @@ version = "1.3.5+1"
 [[deps.OpenBLAS_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]
 uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
-version = "0.3.21+4"
+version = "0.3.23+0"
 
 [[deps.OpenLibm_jll]]
 deps = ["Artifacts", "Libdl"]
@@ -1015,7 +1023,7 @@ version = "0.42.2+0"
 [[deps.Pkg]]
 deps = ["Artifacts", "Dates", "Downloads", "FileWatching", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
-version = "1.9.2"
+version = "1.10.0"
 
 [[deps.PlotThemes]]
 deps = ["PlotUtils", "Statistics"]
@@ -1063,9 +1071,9 @@ version = "0.1.6"
 
 [[deps.PlutoTeachingTools]]
 deps = ["Downloads", "HypertextLiteral", "LaTeXStrings", "Latexify", "Markdown", "PlutoLinks", "PlutoUI", "Random"]
-git-tree-sha1 = "45f9e1b6f62a006a585885f5eb13fc22554a8865"
+git-tree-sha1 = "542de5acb35585afcf202a6d3361b430bc1c3fbd"
 uuid = "661c6b06-c737-4d37-b85c-46df65de6f69"
-version = "0.2.12"
+version = "0.2.13"
 
 [[deps.PlutoUI]]
 deps = ["AbstractPlutoDingetjes", "Base64", "ColorTypes", "Dates", "FixedPointNumbers", "Hyperscript", "HypertextLiteral", "IOCapture", "InteractiveUtils", "JSON", "Logging", "MIMEs", "Markdown", "Random", "Reexport", "URIs", "UUIDs"]
@@ -1121,7 +1129,7 @@ deps = ["InteractiveUtils", "Markdown", "Sockets", "Unicode"]
 uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 
 [[deps.Random]]
-deps = ["SHA", "Serialization"]
+deps = ["SHA"]
 uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [[deps.RationalRoots]]
@@ -1236,6 +1244,7 @@ version = "1.1.1"
 [[deps.SparseArrays]]
 deps = ["Libdl", "LinearAlgebra", "Random", "Serialization", "SuiteSparse_jll"]
 uuid = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+version = "1.10.0"
 
 [[deps.SplitApplyCombine]]
 deps = ["Dictionaries", "Indexing"]
@@ -1277,9 +1286,9 @@ version = "1.6.0"
 
 [[deps.StatsBase]]
 deps = ["DataAPI", "DataStructures", "LinearAlgebra", "LogExpFunctions", "Missings", "Printf", "Random", "SortingAlgorithms", "SparseArrays", "Statistics", "StatsAPI"]
-git-tree-sha1 = "d1bf48bfcc554a3761a133fe3a9bb01488e06916"
+git-tree-sha1 = "75ebe04c5bed70b91614d684259b661c9e6274a4"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-version = "0.33.21"
+version = "0.34.0"
 
 [[deps.Strided]]
 deps = ["LinearAlgebra", "StridedViews", "TupleTools"]
@@ -1300,7 +1309,7 @@ uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
 [[deps.SuiteSparse_jll]]
 deps = ["Artifacts", "Libdl", "Pkg", "libblastrampoline_jll"]
 uuid = "bea87d4a-7f5b-5778-9afe-8cc45184846c"
-version = "5.10.1+6"
+version = "7.2.0+0"
 
 [[deps.TOML]]
 deps = ["Dates"]
@@ -1332,9 +1341,9 @@ version = "0.1.1"
 
 [[deps.TensorKit]]
 deps = ["HalfIntegers", "LRUCache", "LinearAlgebra", "Strided", "TensorOperations", "TupleTools", "VectorInterface", "WignerSymbols"]
-git-tree-sha1 = "217f725cc8ef0016d955ac48806b01513aa49c5a"
+git-tree-sha1 = "4c8dd89ff3aab545e1ca02b851f567d465c8115e"
 uuid = "07d1fe3e-3e46-537d-9eac-e9e13d0d4cec"
-version = "0.11.0"
+version = "0.11.1"
 
 [[deps.TensorKitManifolds]]
 deps = ["LinearAlgebra", "TensorKit"]
@@ -1429,9 +1438,9 @@ version = "0.4.1"
 
 [[deps.Unitful]]
 deps = ["Dates", "LinearAlgebra", "Random"]
-git-tree-sha1 = "64eb17acef1d9734cf09967539818f38093d9b35"
+git-tree-sha1 = "607c142139151faa591b5e80d8055a15e487095b"
 uuid = "1986cc42-f94f-5a68-af5c-568840ba703d"
-version = "1.16.2"
+version = "1.16.3"
 weakdeps = ["ConstructionBase", "InverseFunctions"]
 
     [deps.Unitful.extensions]
@@ -1618,9 +1627,9 @@ version = "1.5.0+0"
 
 [[deps.Yao]]
 deps = ["BitBasis", "LinearAlgebra", "LuxurySparse", "Reexport", "YaoAPI", "YaoArrayRegister", "YaoBlocks", "YaoSym"]
-git-tree-sha1 = "6e2bacb36829f6f4abc6d4819a987e72b7aa5bf2"
+git-tree-sha1 = "8e01e459915ba93873867193520d5da1fef50805"
 uuid = "5872b779-8223-5990-8dd0-5abbb0748c8c"
-version = "0.8.9"
+version = "0.8.10"
 
 [[deps.YaoAPI]]
 git-tree-sha1 = "7c26671b9f9b3ad45aadedd3500b5ce15485931e"
@@ -1629,21 +1638,21 @@ version = "0.4.6"
 
 [[deps.YaoArrayRegister]]
 deps = ["Adapt", "BitBasis", "DocStringExtensions", "LegibleLambdas", "LinearAlgebra", "LuxurySparse", "MLStyle", "Random", "SparseArrays", "StaticArrays", "StatsBase", "TupleTools", "YaoAPI"]
-git-tree-sha1 = "47f6c9001f9b6d8489c00c11391e48a9d65411bd"
+git-tree-sha1 = "9497f0e4c5624882cffc1dd9c0a10b7816ecc078"
 uuid = "e600142f-9330-5003-8abb-0ebd767abc51"
-version = "0.9.6"
+version = "0.9.7"
 
 [[deps.YaoBlocks]]
 deps = ["BitBasis", "CacheServers", "ChainRulesCore", "DocStringExtensions", "ExponentialUtilities", "InteractiveUtils", "LegibleLambdas", "LinearAlgebra", "LuxurySparse", "MLStyle", "Random", "SparseArrays", "StaticArrays", "StatsBase", "TupleTools", "YaoAPI", "YaoArrayRegister"]
-git-tree-sha1 = "40182a9fb85da81931e2293b07cef830755528cc"
+git-tree-sha1 = "342b227e10d12e3f6e21923411a88bfdb09fbf32"
 uuid = "418bc28f-b43b-5e0b-a6e7-61bbc1a2c1df"
-version = "0.13.8"
+version = "0.13.9"
 
 [[deps.YaoSym]]
 deps = ["BitBasis", "LinearAlgebra", "LuxurySparse", "Requires", "SparseArrays", "YaoArrayRegister", "YaoBlocks"]
-git-tree-sha1 = "cccefe12e5010bee69e619467f8bfe3a10ef8250"
+git-tree-sha1 = "5f4e557b3bac0f8433013ab543fe1251a83c12c9"
 uuid = "3b27209a-d3d6-11e9-3c0f-41eb92b2cb9d"
-version = "0.6.5"
+version = "0.6.6"
 
 [[deps.Zeros]]
 deps = ["Test"]
@@ -1718,7 +1727,7 @@ version = "1.3.7+1"
 [[deps.nghttp2_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850ede-7688-5339-a07c-302acd2aaf8d"
-version = "1.48.0+0"
+version = "1.52.0+0"
 
 [[deps.p7zip_jll]]
 deps = ["Artifacts", "Libdl"]
